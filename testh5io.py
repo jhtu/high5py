@@ -66,11 +66,11 @@ class TestH5IO(unittest.TestCase):
     # comparison are passed in as an argument, but the descriptions are
     # hard-coded into this function.
     def _helper_check_dataset(self, file_path, dset_name, true_data, 
-        description):
+        desc):
         # Check that dataset exists, check description of dataset
         fid = h5py.File(file_path, 'r')
         self.assertTrue(dset_name in list(fid))
-        self.assertEqual(fid[dset_name].attrs['Description'], description)
+        self.assertEqual(fid[dset_name].attrs['Description'], desc)
 
         # If data is complex, check that real, imag parts are defined, and check
         # their descriptions
@@ -104,10 +104,9 @@ class TestH5IO(unittest.TestCase):
         for dset_name in self.dset_names:
             true_data = getattr(self, dset_name)
             file_path = self.outdir + dset_name + '_saved.h5'
-            description = dset_name + ' description'
-            h5io.save_array(file_path, true_data, dset_name, description)
-            self._helper_check_dataset(file_path, dset_name, true_data, 
-                description)
+            desc = dset_name + ' description'
+            h5io.save_array(file_path, true_data, dset_name, desc)
+            self._helper_check_dataset(file_path, dset_name, true_data, desc)
 
 
     # Check that a single scalar can be appended to a file correctly.  Check
@@ -123,10 +122,9 @@ class TestH5IO(unittest.TestCase):
             dset_name = '%s_scalar' % d_type
             true_data = getattr(self, dset_name)
             name = dset_name
-            description = dset_name + ' description'
-            h5io.append_scalars(file_path, true_data, name, description)
-            self._helper_check_dataset(file_path, dset_name, true_data, 
-                description)
+            desc = dset_name + ' description'
+            h5io.append_scalars(file_path, true_data, name, desc)
+            self._helper_check_dataset(file_path, dset_name, true_data, desc)
     
     
     # Check that multiple scalars can be appended to a file correctly.
@@ -138,12 +136,11 @@ class TestH5IO(unittest.TestCase):
         dset_name_list = ['%s_scalar' % d_type for d_type in self.data_types]
         true_data_list = [getattr(self, dset_name) for dset_name in 
             dset_name_list]
-        description_list = [dset_name + ' description' for dset_name in 
+        desc_list = [dset_name + ' description' for dset_name in 
             dset_name_list]
         h5io.append_scalars(file_path, true_data_list, dset_name_list, 
-            description_list)
-        for name, data, desc in zip(dset_name_list, true_data_list, 
-            description_list):
+            desc_list)
+        for name, data, desc in zip(dset_name_list, true_data_list,  desc_list):
             self._helper_check_dataset(file_path, name, data, desc)
         
 
