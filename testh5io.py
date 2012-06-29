@@ -89,6 +89,16 @@ class TestH5IO(unittest.TestCase):
         fid.close()
 
 
+    # Check that an hdf5 can correctly be queried for the existence of a group/
+    # dataset.
+    def test_exists(self):
+        fid = h5py.File(self.file_path, 'w')
+        fid['existing_dataset'] = 'data_string'
+        fid.close()
+        self.assertTrue(h5io.exists(self.file_path, 'existing_dataset'))
+        self.assertFalse(h5io.exists(self.file_path, 'nonexistent_dataset'))
+
+
     # Check that the data that was generated and saved by generate_data() is 
     # loaded correctly.
     def test_load_dataset(self):

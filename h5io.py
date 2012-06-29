@@ -4,6 +4,15 @@ import numpy as np
 import h5py 
 
 
+# Check that a dataset exists
+def exists(path_to_file, path_to_check_for):
+    fid = h5py.File(path_to_file, 'r') 
+    available_paths = []
+    fid.visit(available_paths.append)
+    fid.close()
+    return path_to_check_for in available_paths
+
+
 # Load a dataset 
 def load_dataset(path_to_file, path_to_dataset):
     fid = h5py.File(path_to_file, 'r') 
