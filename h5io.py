@@ -37,7 +37,7 @@ def rename_dataset(
 
 # Save an array as a dataset.  If array is complex-valued, a group will be
 # created containing the real and imaginary parts as separate datasets.
-def save_array(path_to_file, array, name, desc, truncate=False):
+def save_array(path_to_file, array, name, desc, truncate=True):
     if truncate:
         file_mode = 'w'
     else:
