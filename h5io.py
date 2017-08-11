@@ -56,6 +56,11 @@ def save_array(path_to_file, array, name, desc, truncate=True):
     fid.close()
 
 
+# Append an array as a dataset.
+def append_array(path_to_file, array, name, desc):
+    save_array(path_to_file, array, name, desc, truncate=False)
+
+
 # Append scalars to a file.
 def append_scalars(path_to_file, scalars, names, descs):
     if not isinstance(scalars, Iterable):
