@@ -16,7 +16,7 @@ def exists(path_to_file, path_to_check_for):
 # Load a dataset
 def load_dataset(path_to_file, path_to_dataset):
     fid = h5py.File(path_to_file, 'r')
-    path_to_dataset = unicode(path_to_dataset)
+    path_to_dataset = u'{}'.format(path_to_dataset)
     data = fid[path_to_dataset][...]
     fid.close()
     return data
