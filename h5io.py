@@ -25,8 +25,8 @@ def load_dataset(path_to_file, path_to_dataset):
 # Rename a dataset
 def rename_dataset(
     path_to_file, old_path_to_dataset, new_path_to_dataset, new_desc=None):
-    old_path_to_dataset = unicode(old_path_to_dataset)
-    new_path_to_dataset = unicode(new_path_to_dataset)
+    old_path_to_dataset = u'{}'.format(old_path_to_dataset)
+    new_path_to_dataset = u'{}'.format(new_path_to_dataset)
     fid = h5py.File(path_to_file, 'a')
     fid[new_path_to_dataset] = fid[old_path_to_dataset]
     if new_desc is not None:
@@ -42,7 +42,7 @@ def save_array(path_to_file, array, name, desc, truncate=True):
         file_mode = 'w'
     else:
         file_mode = 'a'
-    name = unicode(name)
+    name = u'{}'.format(name)
     fid = h5py.File(path_to_file, file_mode)
     if np.iscomplexobj(array):
         fid.create_group(name)
@@ -74,7 +74,7 @@ def append_scalars(path_to_file, scalars, names, descs):
 
     fid = h5py.File(path_to_file, 'a')
     for s, n, d in zip(scalars, names, descs):
-        n = unicode(n)
+        n = u'{}'.format(n)
         if np.iscomplexobj(s):
             fid.create_group(n)
             fid[n].create_dataset('real', data=s.real)
