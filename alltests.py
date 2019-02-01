@@ -2,7 +2,7 @@ import os
 import sys
 import unittest
 
-import helper
+from . import helper
 
 
 # Discover and run tests
