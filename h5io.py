@@ -19,6 +19,8 @@ def load_dataset(path_to_file, path_to_dataset):
     path_to_dataset = u'{}'.format(path_to_dataset)
     data = fid[path_to_dataset][...]
     fid.close()
+    if len(data.shape) == 0:
+        return np.asscalar(data)
     return data
 
 
