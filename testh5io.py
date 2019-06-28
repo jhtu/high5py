@@ -37,15 +37,16 @@ class TestH5IO(unittest.TestCase):
         # Make some vector data
         self.int_vector = np.random.randint(-10, 10, size=self.rows)
         self.float_vector = np.random.rand(self.rows)
-        self.complex_vector = np.random.rand(self.rows) +\
-            1j * np.random.rand(self.rows)
+        self.complex_vector = (
+            np.random.rand(self.rows) + 1j * np.random.rand(self.rows))
 
         # Make some array data
-        self.int_array = np.random.randint(-10, 10,
-            size=(self.rows, self.cols))
+        self.int_array = np.random.randint(
+            -10, 10, size=(self.rows, self.cols))
         self.float_array = np.random.rand(self.rows, self.cols)
-        self.complex_array = np.random.rand(self.rows, self.cols) +\
-            1j * np.random.rand(self.rows, self.cols)
+        self.complex_array = (
+            np.random.rand(self.rows, self.cols) +
+            1j * np.random.rand(self.rows, self.cols))
 
         # Save to hdf5 file
         fid = h5py.File(self.file_path, 'w')
@@ -72,20 +73,9 @@ class TestH5IO(unittest.TestCase):
         self.assertTrue(dset_name in list(fid))
         self.assertEqual(fid[dset_name].attrs['Description'], desc)
 
-        # If data is complex, check that real, imag parts are defined, and check
-        # their descriptions
-        if np.iscomplexobj(true_data):
-            for part, part_desc in zip(['real', 'imag'], ['Real', 'Imaginary']):
-                self.assertTrue(part in list(fid[dset_name]))
-                dset_name_part = '%s/%s' % (dset_name, part)
-                self.assertEqual(fid[dset_name_part].attrs['Description'],
-                    part_desc + ' part')
-                saved_data = fid[dset_name_part][...]
-                self._helper_assert_equal(saved_data, getattr(true_data, part))
-        # If data is real, check value
-        else:
-            saved_data = fid[dset_name][...]
-            self._helper_assert_equal(saved_data, true_data)
+        # Check values
+        saved_data = fid[dset_name][...]
+        self._helper_assert_equal(saved_data, true_data)
         fid.close()
 
 

@@ -46,14 +46,7 @@ def save_array(path_to_file, array, name, desc, truncate=True):
         file_mode = 'a'
     name = u'{}'.format(name)
     fid = h5py.File(path_to_file, file_mode)
-    if np.iscomplexobj(array):
-        fid.create_group(name)
-        fid[name].create_dataset('real', data=array.real)
-        fid[name + '/real'].attrs['Description'] = 'Real part'
-        fid[name].create_dataset('imag', data=array.imag)
-        fid[name + '/imag'].attrs['Description'] = 'Imaginary part'
-    else:
-        fid.create_dataset(name, data=array)
+    fid.create_dataset(name, data=array)
     fid[name].attrs['Description'] = desc
     fid.close()
 
@@ -77,13 +70,6 @@ def append_scalars(path_to_file, scalars, names, descs):
     fid = h5py.File(path_to_file, 'a')
     for s, n, d in zip(scalars, names, descs):
         n = u'{}'.format(n)
-        if np.iscomplexobj(s):
-            fid.create_group(n)
-            fid[n].create_dataset('real', data=s.real)
-            fid[n + '/real'].attrs['Description'] = 'Real part'
-            fid[n].create_dataset('imag', data=s.imag)
-            fid[n + '/imag'].attrs['Description'] = 'Imaginary part'
-        else:
-            fid.create_dataset(n, data=s)
+        fid.create_dataset(n, data=s)
         fid[n].attrs['Description'] = d
     fid.close()
