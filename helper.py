@@ -3,7 +3,8 @@ import os
 import sys
 import unittest
 
-# Add directory to sys.path for importing modules.  Directory must be a string 
+
+# Add directory to sys.path for importing modules.  Directory must be a string
 # relative to the modred top level, such as "src" or "examples".  Use this
 # complex function to ensure things are operating system-independent.
 def add_to_path(directory):
@@ -11,6 +12,3 @@ def add_to_path(directory):
         directory)
     if sys.path[0] != dir_loc:
         sys.path.insert(0, dir_loc)
-
-
-
