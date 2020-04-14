@@ -22,31 +22,31 @@ class TestH5IO(unittest.TestCase):
 
     def generate_data(self):
         # Types of data to create
-        self.data_types = ['int', 'float', 'complex']
+        self.dtype_names = ['int', 'float', 'complex']
         self.array_types = ['scalar', 'vector', 'array']
         self.dset_names = ['%s_%s' % (d_type, a_type)
-            for d_type in self.data_types for a_type in self.array_types]
-        self.rows = np.random.randint(2, 10)
-        self.cols = np.random.randint(2, 10)
+            for d_type in self.dtype_names for a_type in self.array_types]
+        self.num_rows = np.random.randint(2, 10)
+        self.num_cols = np.random.randint(2, 10)
 
         # Make some scalar data
         self.int_scalar = np.random.randint(-10, 10)
         self.float_scalar = np.random.rand()
-        self.complex_scalar = np.random.rand() + 1j* np.random.rand()
+        self.complex_scalar = np.random.rand() + 1j * np.random.rand()
 
         # Make some vector data
-        self.int_vector = np.random.randint(-10, 10, size=self.rows)
-        self.float_vector = np.random.rand(self.rows)
+        self.int_vector = np.random.randint(-10, 10, size=self.num_rows)
+        self.float_vector = np.random.rand(self.num_rows)
         self.complex_vector = (
-            np.random.rand(self.rows) + 1j * np.random.rand(self.rows))
+            np.random.rand(self.num_rows) + 1j * np.random.rand(self.num_rows))
 
         # Make some array data
         self.int_array = np.random.randint(
-            -10, 10, size=(self.rows, self.cols))
-        self.float_array = np.random.rand(self.rows, self.cols)
+            -10, 10, size=(self.num_rows, self.num_cols))
+        self.float_array = np.random.rand(self.num_rows, self.num_cols)
         self.complex_array = (
-            np.random.rand(self.rows, self.cols) +
-            1j * np.random.rand(self.rows, self.cols))
+            np.random.rand(self.num_rows, self.num_cols) +
+            1j * np.random.rand(self.num_rows, self.num_cols))
 
         # Save to hdf5 file
         fid = h5py.File(self.file_path, 'w')
