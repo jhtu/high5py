@@ -16,9 +16,7 @@ def exists(path_to_file, path_to_check_for):
 def load_dataset(path_to_file, path_to_dataset):
     path_to_dataset = u'{}'.format(path_to_dataset)
     with h5py.File(path_to_file, 'r') as fid:
-        data = fid[path_to_dataset][...]
-    if len(data.shape) == 0:
-        return np.asscalar(data)
+        data = fid[path_to_dataset][()]
     return data
 
 
