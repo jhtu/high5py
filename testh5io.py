@@ -68,27 +68,32 @@ class TestH5IO(unittest.TestCase):
     # Check that a dataset inside an HDF5 file is correct.  The data for
     # comparison are passed in as an argument, but the descriptions are
     # hard-coded into this function.
-        # Check that dataset exists, check description of dataset
-        fid = h5py.File(file_path, 'r')
-        self.assertTrue(dset_name in list(fid))
-        self.assertEqual(fid[dset_name].attrs['Description'], desc)
     def _helper_check_dataset(
         self, file_path, dset_name, true_data, desc):
 
-        # Check values
-        saved_data = fid[dset_name][...]
-        self._helper_assert_equal(saved_data, true_data)
-        fid.close()
+        # Open file
+        with h5py.File(file_path, 'r') as fid:
+
+            # Check that dataset exists
+            self.assertTrue(dset_name in list(fid))
+
+            # Check description of dataset
+            self.assertEqual(fid[dset_name].attrs['Description'], desc)
+
+            # Check values
+            saved_data = fid[dset_name][()]
+            self._helper_assert_equal(saved_data, true_data)
 
 
     # Check that an HDF5 can correctly be queried for the existence of a group/
     # dataset
     def test_exists(self):
-        fid = h5py.File(self.file_path, 'w')
-        fid['existing_dataset'] = 'data_string'
-        fid.close()
-        self.assertTrue(h5io.exists(self.file_path, 'existing_dataset'))
-        self.assertFalse(h5io.exists(self.file_path, 'nonexistent_dataset'))
+        with h5py.File(self.file_path, 'w') as fid:
+            fid['existing/dataset'] = 'data_string'
+        self.assertTrue(h5io.exists(self.file_path, 'existing'))
+        self.assertTrue(h5io.exists(self.file_path, 'existing/dataset'))
+        self.assertFalse(h5io.exists(self.file_path, 'existing/other'))
+        self.assertFalse(h5io.exists(self.file_path, 'nonexistent/dataset'))
 
 
     # Check that the data that was generated and saved by generate_data() is
