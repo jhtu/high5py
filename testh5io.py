@@ -29,10 +29,12 @@ class TestH5IO(unittest.TestCase):
         self.num_rows = np.random.randint(2, 10)
         self.num_cols = np.random.randint(2, 10)
 
-        # Make some scalar data
-        self.int_scalar = np.random.randint(-10, 10)
-        self.float_scalar = np.random.rand()
-        self.complex_scalar = np.random.rand() + 1j * np.random.rand()
+        # Make some scalar data (create an array first, so that the type is
+        # np.int32, not int, for later comparisons)
+        self.int_scalar = np.array(np.random.randint(-10, 10))[()]
+        self.float_scalar = np.array(np.random.rand())[()]
+        self.complex_scalar = np.array(
+            np.random.rand() + 1j * np.random.rand())[()]
 
         # Make some vector data
         self.int_vector = np.random.randint(-10, 10, size=self.num_rows)
@@ -56,6 +58,7 @@ class TestH5IO(unittest.TestCase):
 
     # Check equality for both arrays and scalars
     def _helper_assert_equal(self, test_data, true_data):
+        self.assertEqual(type(test_data), type(true_data))
         if isinstance(true_data, np.ndarray):
             np.testing.assert_array_equal(test_data, true_data)
         else:
