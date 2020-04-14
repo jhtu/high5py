@@ -48,13 +48,13 @@ class TestH5IO(unittest.TestCase):
             np.random.rand(self.num_rows, self.num_cols) +
             1j * np.random.rand(self.num_rows, self.num_cols))
 
-        # Save to hdf5 file
+        # Save to HDF5 file
         with h5py.File(self.file_path, 'w') as fid:
             for dset_name in self.dset_names:
                 fid[dset_name] = getattr(self, dset_name)
 
 
-    # Check equality for both arrays or scalars
+    # Check equality for both arrays and scalars
     def _helper_assert_equal(self, test_data, true_data):
         if isinstance(true_data, np.ndarray):
             np.testing.assert_array_equal(test_data, true_data)
@@ -62,15 +62,15 @@ class TestH5IO(unittest.TestCase):
             self.assertEqual(test_data, true_data)
 
 
-    # Check that a dataset inside an hdf5 file is correct.  The data for
+    # Check that a dataset inside an HDF5 file is correct.  The data for
     # comparison are passed in as an argument, but the descriptions are
     # hard-coded into this function.
-    def _helper_check_dataset(self, file_path, dset_name, true_data,
-        desc):
         # Check that dataset exists, check description of dataset
         fid = h5py.File(file_path, 'r')
         self.assertTrue(dset_name in list(fid))
         self.assertEqual(fid[dset_name].attrs['Description'], desc)
+    def _helper_check_dataset(
+        self, file_path, dset_name, true_data, desc):
 
         # Check values
         saved_data = fid[dset_name][...]
@@ -78,8 +78,8 @@ class TestH5IO(unittest.TestCase):
         fid.close()
 
 
-    # Check that an hdf5 can correctly be queried for the existence of a group/
-    # dataset.
+    # Check that an HDF5 can correctly be queried for the existence of a group/
+    # dataset
     def test_exists(self):
         fid = h5py.File(self.file_path, 'w')
         fid['existing_dataset'] = 'data_string'
@@ -89,7 +89,7 @@ class TestH5IO(unittest.TestCase):
 
 
     # Check that the data that was generated and saved by generate_data() is
-    # loaded correctly.
+    # loaded correctly
     def test_load_dataset(self):
         for dset_name in self.dset_names:
             loaded_data = h5io.load_dataset(self.file_path, dset_name)
@@ -97,9 +97,8 @@ class TestH5IO(unittest.TestCase):
             self._helper_assert_equal(loaded_data, true_data)
 
 
-    # Take generated data and save to file.  Then check that contents of hdf5
-    # file are correct
     def test_save_array(self):
+    # Save generated data to HDF5 file and check that contents are correct
         for dset_name in self.dset_names:
             true_data = getattr(self, dset_name)
             file_path = self.outdir + dset_name + '_saved.h5'
