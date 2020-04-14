@@ -49,10 +49,9 @@ class TestH5IO(unittest.TestCase):
             1j * np.random.rand(self.num_rows, self.num_cols))
 
         # Save to hdf5 file
-        fid = h5py.File(self.file_path, 'w')
-        for dset_name in self.dset_names:
-            fid[dset_name] = getattr(self, dset_name)
-        fid.close()
+        with h5py.File(self.file_path, 'w') as fid:
+            for dset_name in self.dset_names:
+                fid[dset_name] = getattr(self, dset_name)
 
 
     # Check equality for both arrays or scalars
