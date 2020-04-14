@@ -115,6 +115,16 @@ class TestH5IO(unittest.TestCase):
             self._helper_check_dataset(file_path, dset_name, true_data, desc)
 
 
+    # Check that datasets can be renamed correctly
+    def test_rename_dataset(self):
+        for dset_name in self.dset_names:
+            h5io.rename_dataset(
+                self.file_path, dset_name, dset_name + '_mod')
+            with h5py.File(self.file_path, 'r') as fid:
+                self.assertFalse(dset_name in list(fid))
+                self.assertTrue(dset_name + '_mod' in list(fid))
+
+
 # Main routine
 if __name__=='__main__':
     unittest.main(verbosity=2)
