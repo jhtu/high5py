@@ -17,7 +17,7 @@ class TestH5IO(unittest.TestCase):
 
 
     def tearDown(self):
-        shutil.rmtree(self.outdir)
+        shutil.rmtree(self.outdir, ignore_errors=True)
 
 
     def generate_data(self):
