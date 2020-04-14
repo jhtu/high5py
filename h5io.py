@@ -32,9 +32,8 @@ def rename_dataset(
         del fid[old_path_to_dataset]
 
 
-# Save an array as a dataset.  If array is complex-valued, a group will be
-# created containing the real and imaginary parts as separate datasets.
-def save_array(path_to_file, array, name, desc, truncate=True):
+# Save a dataset
+def save_dataset(path_to_file, data, name, desc, truncate=True):
     if truncate:
         file_mode = 'w'
     else:
@@ -45,6 +44,6 @@ def save_array(path_to_file, array, name, desc, truncate=True):
         fid[name].attrs['Description'] = desc
 
 
-# Append an array as a dataset.
-def append_array(path_to_file, array, name, desc):
+# Append a dataset
+def append_dataset(path_to_file, data, name, desc):
     save_array(path_to_file, array, name, desc, truncate=False)
