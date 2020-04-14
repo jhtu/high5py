@@ -1,8 +1,6 @@
 import os
-import sys
-import unittest
 
-from . import helper
+import unittest
 
 
 # Discover and run tests
@@ -14,5 +12,4 @@ def run_all_tests():
 
 # Main routine
 if __name__ == '__main__':
-    helper.add_to_path('src')
-    run()
+    run_all_tests()
