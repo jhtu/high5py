@@ -48,21 +48,3 @@ def save_array(path_to_file, array, name, desc, truncate=True):
 # Append an array as a dataset.
 def append_array(path_to_file, array, name, desc):
     save_array(path_to_file, array, name, desc, truncate=False)
-
-
-# Append scalars to a file.
-def append_scalars(path_to_file, scalars, names, descs):
-    if not isinstance(scalars, Iterable):
-        scalars = [scalars]
-        names = [names]
-        descs = [descs]
-
-    if not len(scalars) == len(names) == len(descs):
-        raise ValueError(
-            'Mismatch in number of scalars, names, and/or descs.')
-
-    with h5py.File(path_to_file, 'a') as fid:
-        for s, n, d in zip(scalars, names, descs):
-            n = u'{}'.format(n)
-            fid.create_dataset(n, data=s)
-            fid[n].attrs['Description'] = d

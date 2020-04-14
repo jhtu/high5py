@@ -109,41 +109,6 @@ class TestH5IO(unittest.TestCase):
             self._helper_check_dataset(file_path, dset_name, true_data, desc)
 
 
-    # Check that a single scalar can be appended to a file correctly.  Check
-    # this separately from the case where many scalars are appended to ensure
-    # that the case of a float argument (as opposed to a list) is correctly
-    # handled.
-    def test_append_single_scalars(self):
-        file_path = self.outdir + 'append_single_test.h5'
-        fid = h5py.File(file_path, 'w')
-        fid.close()
-
-        for d_type in self.data_types:
-            dset_name = '%s_scalar' % d_type
-            true_data = getattr(self, dset_name)
-            name = dset_name
-            desc = dset_name + ' description'
-            h5io.append_scalars(file_path, true_data, name, desc)
-            self._helper_check_dataset(file_path, dset_name, true_data, desc)
-
-
-    # Check that multiple scalars can be appended to a file correctly.
-    def test_append_multiple_scalars(self):
-        file_path = self.outdir + 'append_multi_test.h5'
-        fid = h5py.File(file_path, 'w')
-        fid.close()
-
-        dset_name_list = ['%s_scalar' % d_type for d_type in self.data_types]
-        true_data_list = [getattr(self, dset_name) for dset_name in
-            dset_name_list]
-        desc_list = [dset_name + ' description' for dset_name in
-            dset_name_list]
-        h5io.append_scalars(file_path, true_data_list, dset_name_list,
-            desc_list)
-        for name, data, desc in zip(dset_name_list, true_data_list,  desc_list):
-            self._helper_check_dataset(file_path, name, data, desc)
-
-
 # Main routine
 if __name__=='__main__':
     unittest.main(verbosity=2)
