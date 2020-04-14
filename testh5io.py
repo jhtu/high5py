@@ -65,9 +65,7 @@ class TestH5IO(unittest.TestCase):
             self.assertEqual(test_data, true_data)
 
 
-    # Check that a dataset inside an HDF5 file is correct.  The data for
-    # comparison are passed in as an argument, but the descriptions are
-    # hard-coded into this function.
+    # Check that a dataset inside an HDF5 file is correct
     def _helper_check_dataset(
         self, file_path, dset_name, true_data, desc):
 
@@ -85,8 +83,7 @@ class TestH5IO(unittest.TestCase):
             self._helper_assert_equal(saved_data, true_data)
 
 
-    # Check that an HDF5 can correctly be queried for the existence of a group/
-    # dataset
+    # Check that existence of groups/datasets can be queried correctly
     def test_exists(self):
         with h5py.File(self.file_path, 'w') as fid:
             fid['existing/dataset'] = 'data_string'
@@ -96,8 +93,7 @@ class TestH5IO(unittest.TestCase):
         self.assertFalse(h5io.exists(self.file_path, 'nonexistent/dataset'))
 
 
-    # Check that the data that was generated and saved by generate_data() is
-    # loaded correctly
+    # Check that datasets can be loaded correctly
     def test_load_dataset(self):
         for dset_name in self.dset_names:
             loaded_data = h5io.load_dataset(self.file_path, dset_name)
@@ -105,7 +101,7 @@ class TestH5IO(unittest.TestCase):
             self._helper_assert_equal(loaded_data, true_data)
 
 
-    # Save generated data to HDF5 file and check that contents are correct
+    # Check that datasets can be saved correctly
     def test_save_dataset(self):
         for dset_name in self.dset_names:
             true_data = getattr(self, dset_name)
