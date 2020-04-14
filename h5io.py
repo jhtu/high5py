@@ -18,18 +18,6 @@ def load_dataset(file_path, dataset_path):
     return data
 
 
-# Rename a dataset
-def rename_dataset(
-    file_path, old_dataset_path, new_dataset_path, new_description=None):
-    old_dataset_path = u'{}'.format(old_dataset_path)
-    new_dataset_path = u'{}'.format(new_dataset_path)
-    with h5py.File(file_path, 'a') as fid:
-        fid[new_dataset_path] = fid[old_dataset_path]
-        if new_description is not None:
-            fid[new_dataset_path].attrs['Description'] = new_description
-        del fid[old_dataset_path]
-
-
 # Save a dataset
 def save_dataset(file_path, data, dataset_path, description, truncate=True):
     if truncate:
@@ -40,6 +28,18 @@ def save_dataset(file_path, data, dataset_path, description, truncate=True):
     with h5py.File(file_path, file_mode) as fid:
         fid.create_dataset(dataset_path, data=data)
         fid[dataset_path].attrs['Description'] = description
+
+
+# Rename a dataset
+def rename_dataset(
+        file_path, old_dataset_path, new_dataset_path, new_description=None):
+    old_dataset_path = u'{}'.format(old_dataset_path)
+    new_dataset_path = u'{}'.format(new_dataset_path)
+    with h5py.File(file_path, 'a') as fid:
+        fid[new_dataset_path] = fid[old_dataset_path]
+        if new_description is not None:
+            fid[new_dataset_path].attrs['Description'] = new_description
+            del fid[old_dataset_path]
 
 
 # Append a dataset
