@@ -1,6 +1,6 @@
 import unittest
 import os
-import subprocess as sp
+import shutil
 
 import numpy as np
 import h5py
@@ -12,12 +12,12 @@ class TestH5IO(unittest.TestCase):
         self.outdir = os.path.join(os.path.dirname(__file__), 'tmp/')
         self.file_path = self.outdir + 'test_file.py'
         if not os.path.isdir(self.outdir):
-            sp.call(['mkdir', self.outdir])
+            os.mkdir(self.outdir)
         self.generate_data()
 
 
     def tearDown(self):
-        sp.call(['rm -rf ' + self.outdir], shell=True)
+        shutil.rmtree(self.outdir)
 
 
     def generate_data(self):
