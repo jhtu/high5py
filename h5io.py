@@ -39,7 +39,7 @@ def rename_dataset(
         fid[new_dataset_path] = fid[old_dataset_path]
         if new_description is not None:
             fid[new_dataset_path].attrs['Description'] = new_description
-            del fid[old_dataset_path]
+        del fid[old_dataset_path]
 
 
 # Append a dataset
