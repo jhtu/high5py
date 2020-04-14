@@ -100,13 +100,13 @@ class TestH5IO(unittest.TestCase):
             self._helper_assert_equal(loaded_data, true_data)
 
 
-    def test_save_array(self):
     # Save generated data to HDF5 file and check that contents are correct
+    def test_save_dataset(self):
         for dset_name in self.dset_names:
             true_data = getattr(self, dset_name)
             file_path = self.outdir + dset_name + '_saved.h5'
             desc = dset_name + ' description'
-            h5io.save_array(file_path, true_data, dset_name, desc)
+            h5io.save_dataset(file_path, true_data, dset_name, desc)
             self._helper_check_dataset(file_path, dset_name, true_data, desc)
 
 
