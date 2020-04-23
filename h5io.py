@@ -46,5 +46,5 @@ def rename_dataset(
 
 # Append a dataset
 def append_dataset(file_path, data, dataset_path, description=None):
-    save_array(
+    save_dataset(
         file_path, data, dataset_path, description=description, truncate=False)
