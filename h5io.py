@@ -2,6 +2,31 @@ import numpy as np
 import h5py
 
 
+# Get info about a group/dataset
+def info(file_path, path='/'):
+    path = '{}'.format(path)
+    with h5py.File(file_path, 'r') as fid:
+        info_dict = {'filename': fid.filename, 'name': fid[path].name}
+        if isinstance(fid[path], h5py.Group):
+            info_dict['groups'] = [
+                subpath for subpath in fid[path]
+                if isinstance(fid['{}/{}'.format(path, subpath)], h5py.Group)]
+            info_dict['datasets'] = [
+                subpath for subpath in fid[path]
+                if isinstance(fid['{}/{}'.format(path, subpath)], h5py.Dataset)]
+        if isinstance(fid[path], h5py.Dataset):
+            info_dict['datatype'] = fid[path].dtype
+            info_dict['shape'] = fid[path].shape
+            info_dict['size'] = fid[path].size
+            info_dict['chunks'] = fid[path].chunks
+            info_dict['compression'] = fid[path].compression
+        info_dict['attributes'] = [attr for attr in fid[path].attrs]
+    for key, val in info_dict.items():
+        print((
+            '{:>' + '{:d}'.format(max([len(key) for key in info_dict.keys()])) +
+            '}: {}').format(key, val))
+
+
 # Check that a dataset exists
 def exists(file_path, target_dataset_path):
     avail_dataset_paths = []
