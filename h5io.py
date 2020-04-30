@@ -20,7 +20,7 @@ def load_dataset(file_path, dataset_path):
 
 # Save a dataset
 def save_dataset(
-    file_path, data, dataset_path, description=None, truncate=True):
+    file_path, data, dataset_path='data', description=None, truncate=True):
     if truncate:
         file_mode = 'w'
     else:

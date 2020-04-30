@@ -107,7 +107,8 @@ class TestH5IO(unittest.TestCase):
             true_data = getattr(self, dset_name)
             file_path = self.outdir + dset_name + '_saved.h5'
             desc = dset_name + ' description'
-            h5io.save_dataset(file_path, true_data, dset_name, description=desc)
+            h5io.save_dataset(
+                file_path, true_data, dataset_path=dset_name, description=desc)
             self._helper_check_dataset(file_path, dset_name, true_data, desc)
 
 
