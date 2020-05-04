@@ -66,9 +66,10 @@ def rename_dataset(
 
 
 # Append a dataset
-def append_dataset(file_path, data, dataset_path, description=None):
+def append_dataset(file_path, data, dataset_path='data', description=None):
     save_dataset(
-        file_path, data, dataset_path, description=description, truncate=False)
+        file_path, data, dataset_path=dataset_path, description=description,
+        truncate=False)
 
 
 # Convert to NPZ (numpy archive) format
