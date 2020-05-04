@@ -125,3 +125,19 @@ def to_npz(h5_file_path, npz_file_path, path='/'):
 
     # Save data
     np.savez_compressed(npz_file_path, **kwargs)
+
+
+# Convert from NPZ (numpy archive) format
+def from_npz(npz_file_path, h5_file_path):
+
+    # Open file for processing
+    with np.load(npz_file_path) as data:
+
+        # Loop through arrays
+        for idx, (key, val) in enumerate(data.items()):
+
+            # Save to HDF5
+            if idx == 0:
+                save_dataset(h5_file_path, val, dataset_path=key)
+            else:
+                append_dataset(h5_file_path, val, dataset_path=key)

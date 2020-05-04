@@ -122,7 +122,7 @@ class TestH5IO(unittest.TestCase):
                 self.assertTrue(dset_name + '_mod' in list(fid))
 
 
-    # Check that h5py files can be correctly converted to npz files
+    # Check that HDF5 files can be correctly converted to NPZ files
     def test_to_npz(self):
 
         # Generate data
@@ -183,6 +183,23 @@ class TestH5IO(unittest.TestCase):
             np.testing.assert_array_equal(npz_data['x'], datasets['x'])
             np.testing.assert_array_equal(npz_data['y'], datasets['y'])
             self.assertEqual(sorted(npz_data._files), ['x.npy', 'y.npy'])
+
+
+    # Check that HDF5 files can be correctly converted from NPZ files
+    def test_from_npz(self):
+
+        # Generate data
+        datasets = {
+            'x': np.ones(4), 'y': np.arange(10), 'z': np.random.random((5, 6))}
+        npz_path = self.outdir + 'data.npz'
+        np.savez_compressed(npz_path, **datasets)
+
+        # Convert data
+        h5_path = self.outdir + 'data.h5'
+        h5io.from_npz(npz_path, h5_path)
+        with h5py.File(h5_path, 'r') as fid:
+            for key, val in datasets.items():
+                np.testing.assert_array_equal(fid[key][()], val)
 
 
 # Main routine
