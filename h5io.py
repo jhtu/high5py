@@ -73,3 +73,39 @@ def rename_dataset(
 def append_dataset(file_path, data, dataset_path, description=None):
     save_dataset(
         file_path, data, dataset_path, description=description, truncate=False)
+
+
+# Convert to NPZ (numpy archive) format
+def to_npz(h5_file_path, npz_file_path, path='/'):
+
+    with h5py.File(h5_file_path, 'r') as fid:
+
+        # Gather dataset paths, looking for subpaths if the specified path
+        # denotes a group
+        if isinstance(path, str):
+            path = u'{}'.format(path)
+            if isinstance(fid[path], h5py.Dataset):
+                subpaths = [path]
+            elif isinstance(fid[path], h5py.Group):
+                subpaths = ['{}/{}'.format(path, sp) for sp in fid[path]]
+            else:
+                raise ValueError('Unrecognized h5py type.')
+        # Otherwise assume that the specified path is a container of subpaths
+        else:
+            subpaths = [fid[sp].name for sp in path]
+
+        # Check that each subpath corresponds to a dataset, not a group, as it
+        # is unclear how to save subgroups (which may be further nested)
+        if any([not isinstance(fid[sp], h5py.Dataset) for sp in subpaths]):
+            raise ValueError('Specified path contains groups.')
+
+        # Gather data for saving. Process subpath names, ignoring the slash
+        # corresponding to root, and replacing all further slashes with
+        # underscores
+        kwargs = {}
+        for sp in subpaths:
+            name = sp.split('/')[-1]
+            kwargs[name] = fid[sp][()]
+
+        # Save data
+        np.savez_compressed(npz_file_path, **kwargs)
