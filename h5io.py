@@ -37,7 +37,6 @@ def exists(file_path, target_dataset_path):
 
 # Load a dataset
 def load_dataset(file_path, dataset_path):
-    dataset_path = u'{}'.format(dataset_path)
     with h5py.File(file_path, 'r') as fid:
         data = fid[dataset_path][()]
     return data
@@ -50,7 +49,6 @@ def save_dataset(
         file_mode = 'w'
     else:
         file_mode = 'a'
-    dataset_path = u'{}'.format(dataset_path)
     with h5py.File(file_path, file_mode) as fid:
         fid.create_dataset(dataset_path, data=data)
         if description is not None:
@@ -60,8 +58,6 @@ def save_dataset(
 # Rename a dataset
 def rename_dataset(
     file_path, old_dataset_path, new_dataset_path, new_description=None):
-    old_dataset_path = u'{}'.format(old_dataset_path)
-    new_dataset_path = u'{}'.format(new_dataset_path)
     with h5py.File(file_path, 'a') as fid:
         fid[new_dataset_path] = fid[old_dataset_path]
         if new_description is not None:
@@ -83,7 +79,6 @@ def to_npz(h5_file_path, npz_file_path, path='/'):
         # Gather dataset paths, looking for subpaths if the specified path
         # denotes a group
         if isinstance(path, str):
-            path = u'{}'.format(path)
             if isinstance(fid[path], h5py.Dataset):
                 subpaths = [path]
             elif isinstance(fid[path], h5py.Group):
