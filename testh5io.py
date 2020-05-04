@@ -125,62 +125,64 @@ class TestH5IO(unittest.TestCase):
     # Check that h5py files can be correctly converted to npz files
     def test_to_npz(self):
 
-        # Generate some data
+        # Generate data
         datasets = {
             'x': np.ones(4), 'y': np.arange(10), 'z': np.random.random((5, 6))}
-
-        # Generate file with only datasets at the root level
-        h5_path_dsets_only = self.outdir + 'dsets_only.h5'
-        with h5py.File(h5_path_dsets_only, 'w') as fid:
+        h5_path = self.outdir + 'data.h5'
+        with h5py.File(h5_path, 'w') as fid:
             for key, val in datasets.items():
                 fid[key] = val
-
-        # Generate file with datasets, group with subdatasets, and group with
-        # subgroup
-        h5_path_with_groups = self.outdir + 'with_groups.h5'
-        with h5py.File(h5_path_with_groups, 'w') as fid:
-            for key, val in datasets.items():
-                fid[key] = val
-                fid['good_group/{}'.format(key)] = val
-                fid['bad_group/subgroup/{}'.format(key)] = val
+                fid['group0/{}'.format(key)] = val
+                fid['group1/subgroup0/{}'.format(key)] = val
+                fid['group1/subgroup1/{}'.format(key)] = val
 
         # Specify root level, which should save all datasets
         npz_path = self.outdir + 'data.npz'
-        h5io.to_npz(h5_path_dsets_only, npz_path)
+        h5io.to_npz(h5_path, npz_path)
         with np.load(npz_path) as npz_data:
             for key, val in datasets.items():
                 np.testing.assert_array_equal(npz_data[key], val)
+                np.testing.assert_array_equal(
+                    npz_data['group0_{}'.format(key)], val)
+                np.testing.assert_array_equal(
+                    npz_data['group1_subgroup0_{}'.format(key)], val)
+                np.testing.assert_array_equal(
+                    npz_data['group1_subgroup1_{}'.format(key)], val)
 
-        # Specify a single dataset, which should save only a single dataset
+        # Test the specification of a group as the path, which will save only
+        # the datasets in that group, and will also affect the names of the
+        # arrays in the NPZ file
         npz_path = self.outdir + 'data.npz'
-        h5io.to_npz(h5_path_with_groups, npz_path, path='x')
+        h5io.to_npz(h5_path, npz_path, path='group1')
+        with np.load(npz_path) as npz_data:
+            for key, val in datasets.items():
+                np.testing.assert_array_equal(
+                    npz_data['subgroup0_{}'.format(key)], val)
+                self.assertEqual(
+                    sorted(npz_data._files),
+                    ['subgroup{:d}_{}.npy'.format(idx, key)
+                     for idx in range(2)
+                     for key in sorted(datasets.keys())])
+        h5io.to_npz(h5_path, npz_path, path='group1/subgroup1')
+        with np.load(npz_path) as npz_data:
+            for key, val in datasets.items():
+                np.testing.assert_array_equal(npz_data[key], val)
+                self.assertEqual(
+                    sorted(npz_data._files),
+                    ['{}.npy'.format(key) for key in sorted(datasets.keys())])
+
+        # Test the specification of datasets as the path, which should save just
+        # those datasets
+        npz_path = self.outdir + 'data.npz'
+        h5io.to_npz(h5_path, npz_path, path='x')
         with np.load(npz_path) as npz_data:
             np.testing.assert_array_equal(npz_data['x'], datasets['x'])
             self.assertEqual(npz_data._files, ['x.npy'])
-
-        # Specify multiple datasets, which should save only those datasets
-        npz_path = self.outdir + 'data.npz'
-        path = ['x', 'y']
-        h5io.to_npz(h5_path_with_groups, npz_path, path=path)
+        h5io.to_npz(h5_path, npz_path, path=['x', 'y'])
         with np.load(npz_path) as npz_data:
-            for key in path:
-                np.testing.assert_array_equal(npz_data[key], datasets[key])
-            self.assertEqual(
-                sorted(npz_data._files),
-                ['{}.npy'.format(key) for key in sorted(path)])
-
-        # Specify a group containing only datasets
-        npz_path = self.outdir + 'data.npz'
-        h5io.to_npz(h5_path_with_groups, npz_path, path='good_group')
-        with np.load(npz_path) as npz_data:
-            for key, val in datasets.items():
-                np.testing.assert_array_equal(val, npz_data[key])
-
-        # Specify a group containing a subgroup
-        npz_path = self.outdir + 'data.npz'
-        self.assertRaises(
-            ValueError, h5io.to_npz, h5_path_with_groups, npz_path,
-            path='bad_group')
+            np.testing.assert_array_equal(npz_data['x'], datasets['x'])
+            np.testing.assert_array_equal(npz_data['y'], datasets['y'])
+            self.assertEqual(sorted(npz_data._files), ['x.npy', 'y.npy'])
 
 
 # Main routine

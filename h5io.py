@@ -74,33 +74,53 @@ def append_dataset(file_path, data, dataset_path, description=None):
 # Convert to NPZ (numpy archive) format
 def to_npz(h5_file_path, npz_file_path, path='/'):
 
+    # Open file for processing
     with h5py.File(h5_file_path, 'r') as fid:
 
-        # Gather dataset paths, looking for subpaths if the specified path
-        # denotes a group
+        # Initialize root, paths to check
+        dataset_paths = []
         if isinstance(path, str):
             if isinstance(fid[path], h5py.Dataset):
-                subpaths = [path]
-            elif isinstance(fid[path], h5py.Group):
-                subpaths = ['{}/{}'.format(path, sp) for sp in fid[path]]
+                root = '/'
+                dataset_paths = [fid[path].name]
+                paths_to_check = []
             else:
-                raise ValueError('Unrecognized h5py type.')
-        # Otherwise assume that the specified path is a container of subpaths
+                root = path
+                paths_to_check = [path]
         else:
-            subpaths = [fid[sp].name for sp in path]
+            root = '/'
+            paths_to_check = path
 
-        # Check that each subpath corresponds to a dataset, not a group, as it
-        # is unclear how to save subgroups (which may be further nested)
-        if any([not isinstance(fid[sp], h5py.Dataset) for sp in subpaths]):
-            raise ValueError('Specified path contains groups.')
+        # Process until there are no more paths to check
+        while len(paths_to_check) > 0:
+            for subpath in paths_to_check:
+                if isinstance(fid[subpath], h5py.Dataset):
+                    dataset_paths.append(fid[subpath].name)
+                    paths_to_check.remove(subpath)
+                elif isinstance(fid[subpath], h5py.Group):
+                    for subsubpath in fid[subpath]:
+                        paths_to_check.append(
+                            fid['{}/{}'.format(subpath, subsubpath)].name)
+                    paths_to_check.remove(subpath)
 
-        # Gather data for saving. Process subpath names, ignoring the slash
-        # corresponding to root, and replacing all further slashes with
-        # underscores
+        # Generate dataset names for NPZ file starting from the specified root,
+        # and replacing slashes with underscores, since NPZ files don't have
+        # groups
         kwargs = {}
-        for sp in subpaths:
-            name = sp.split('/')[-1]
-            kwargs[name] = fid[sp][()]
+        for dsp in dataset_paths:
 
-        # Save data
-        np.savez_compressed(npz_file_path, **kwargs)
+            # Split off first instance of root
+            key = root.join(dsp.split(root)[1:])
+
+            # Remove leading slash, if any
+            if key[0] == '/':
+                key = key[1:]
+
+            # Replace slashes with underscores
+            key = key.replace('/', '_')
+
+            # Add processed name
+            kwargs[key] = fid[dsp][()]
+
+    # Save data
+    np.savez_compressed(npz_file_path, **kwargs)
