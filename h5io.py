@@ -26,6 +26,7 @@ def info(file_path, path='/'):
         print((
             '{:>' + '{:d}'.format(max([len(key) for key in info_dict.keys()]))
             + '}: {}').format(key, val))
+    return info_dict
 
 
 # Check that a dataset exists
