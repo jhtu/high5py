@@ -13,7 +13,8 @@ def info(file_path, path='/'):
                 if isinstance(fid['{}/{}'.format(path, subpath)], _h5py.Group)]
             info_dict['datasets'] = [
                 subpath for subpath in fid[path]
-                if isinstance(fid['{}/{}'.format(path, subpath)], _h5py.Dataset)]
+                if isinstance(
+                    fid['{}/{}'.format(path, subpath)],_h5py.Dataset)]
         if isinstance(fid[path], _h5py.Dataset):
             info_dict['datatype'] = fid[path].dtype
             info_dict['shape'] = fid[path].shape
@@ -23,16 +24,16 @@ def info(file_path, path='/'):
         info_dict['attributes'] = [attr for attr in fid[path].attrs]
     for key, val in info_dict.items():
         print((
-            '{:>' + '{:d}'.format(max([len(key) for key in info_dict.keys()])) +
-            '}: {}').format(key, val))
+            '{:>' + '{:d}'.format(max([len(key) for key in info_dict.keys()]))
+            + '}: {}').format(key, val))
 
 
 # Check that a dataset exists
-def exists(file_path, target_dataset_path):
-    avail_dataset_paths = []
+def exists(file_path, target_path):
+    avail_paths = []
     with _h5py.File(file_path, 'r') as fid:
-        fid.visit(avail_dataset_paths.append)
-    return target_dataset_path in avail_dataset_paths
+        fid.visit(avail_paths.append)
+    return target_path in avail_paths
 
 
 # Load a dataset
