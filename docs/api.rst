@@ -1,5 +1,5 @@
 API
 ***
 
-.. automodule:: h5io.h5io
+.. automodule:: h5io
    :members:
