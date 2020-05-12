@@ -114,7 +114,7 @@ class TestH5IO(_unittest.TestCase):
             file_path = self.outdir + dset_name + '_saved.h5'
             desc = dset_name + ' description'
             _h5io.save_dataset(
-                file_path, true_data, dataset_path=dset_name, description=desc)
+                file_path, true_data, name=dset_name, description=desc)
             self._helper_check_dataset(file_path, dset_name, true_data, desc)
 
 
@@ -161,7 +161,7 @@ class TestH5IO(_unittest.TestCase):
         # the datasets in that group, and will also affect the names of the
         # arrays in the NPZ file
         npz_path = self.outdir + 'data.npz'
-        _h5io.to_npz(h5_path, npz_path, path='group1')
+        _h5io.to_npz(h5_path, npz_path, name='group1')
         with _np.load(npz_path) as npz_data:
             for key, val in datasets.items():
                 _np.testing.assert_array_equal(
@@ -171,7 +171,7 @@ class TestH5IO(_unittest.TestCase):
                     ['subgroup{:d}_{}.npy'.format(idx, key)
                      for idx in range(2)
                      for key in sorted(datasets.keys())])
-        _h5io.to_npz(h5_path, npz_path, path='group1/subgroup1')
+        _h5io.to_npz(h5_path, npz_path, name='group1/subgroup1')
         with _np.load(npz_path) as npz_data:
             for key, val in datasets.items():
                 _np.testing.assert_array_equal(npz_data[key], val)
@@ -182,11 +182,11 @@ class TestH5IO(_unittest.TestCase):
         # Test the specification of datasets as the path, which should save just
         # those datasets
         npz_path = self.outdir + 'data.npz'
-        _h5io.to_npz(h5_path, npz_path, path='x')
+        _h5io.to_npz(h5_path, npz_path, name='x')
         with _np.load(npz_path) as npz_data:
             _np.testing.assert_array_equal(npz_data['x'], datasets['x'])
             self.assertEqual(npz_data._files, ['x.npy'])
-        _h5io.to_npz(h5_path, npz_path, path=['x', 'y'])
+        _h5io.to_npz(h5_path, npz_path, name=['x', 'y'])
         with _np.load(npz_path) as npz_data:
             _np.testing.assert_array_equal(npz_data['x'], datasets['x'])
             _np.testing.assert_array_equal(npz_data['y'], datasets['y'])
