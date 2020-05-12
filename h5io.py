@@ -2,8 +2,22 @@ import numpy as _np
 import h5py as _h5py
 
 
-# Get info about a group/dataset
-def info(file_path, path='/'):
+def info(file_path, path='/', return_info=False):
+    """Print and return information about HDF5 file, group, or dataset.
+
+    Parameters
+    ----------
+    file_path: str
+        Path to HDF5 file.
+    path: str, optional
+        HDF5 path to group or dataset.  Defaults to root group ('/').
+
+    Returns
+    -------
+    dict, optional
+        Dictionary of key, value pairs describing specified group or dataset.
+        Only provided if return_info is True.
+    """
     path = '{}'.format(path)
     with _h5py.File(file_path, 'r') as fid:
         info_dict = {'filename': fid.filename, 'name': fid[path].name}
@@ -21,12 +35,14 @@ def info(file_path, path='/'):
             info_dict['size'] = fid[path].size
             info_dict['chunks'] = fid[path].chunks
             info_dict['compression'] = fid[path].compression
-        info_dict['attributes'] = [attr for attr in fid[path].attrs]
+        info_dict['attributes'] = {
+            key: val for key, val in fid[path].attrs.items()}
     for key, val in info_dict.items():
         print((
             '{:>' + '{:d}'.format(max([len(key) for key in info_dict.keys()]))
             + '}: {}').format(key, val))
-    return info_dict
+    if return_info:
+        return info_dict
 
 
 # Check that a dataset exists
