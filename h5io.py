@@ -161,6 +161,48 @@ def append_dataset(file_path, data, path='data', description=None):
         file_path, data, path=path, description=description, overwrite=False)
 
 
+def save_attributes(file_path, attributes, path='data', overwrite=True):
+    """Save HDF5 group or dataset attributes (overwrites existing attributes by
+    default).
+
+    Parameters
+    ----------
+    file_path: str
+        Path to HDF5 file.
+    attributes: dict
+        Attributes to save.
+    path: str, optional
+        HDF5 path to group or dataset.  Can be a multi-level path denoting a
+        dataset within a group, such as '/group/dataset'.  Defaults to 'data'.
+    overwrite: bool
+        If True, saving overwrites existing attributes.  Otherwise, new
+        attributes are appended to existing ones.  Defaults to True.
+    """
+    with _h5py.File(file_path, 'a') as fid:
+        if overwrite:
+            for key, val in fid[path].attrs.items():
+                del fid[path].attrs[key]
+        for key, val in attributes.items():
+            fid[path].attrs[key] = val
+
+
+def append_attributes(file_path, attributes, path='data'):
+    """Append HDF5 group or dataset attributes (never overwrites existing
+    attributes).
+
+    Parameters
+    ----------
+    file_path: str
+        Path to HDF5 file.
+    attributes: dict
+        Attributes to append.
+    path: str, optional
+        HDF5 path to group or dataset.  Can be a multi-level path denoting a
+        dataset within a group, such as '/group/dataset'.  Defaults to 'data'.
+    """
+    save_attributes(file_path, attributes, path=path, overwrite=False)
+
+
 def to_npz(h5_file_path, npz_file_path, path='/'):
     """Save an HDF5 group or dataset to NPZ (compressed numpy archive) format.
     Subgroups such as path/group/subgroup/dataset will be saved with array names
