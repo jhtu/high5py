@@ -8,6 +8,8 @@ You can use ``h5io`` to make one-line calls for the most common HDF5 tasks, like
 
 .. include:: api.rst
 
+.. include:: release.rst
+
 
 Indices and tables
 ==================
