@@ -6,6 +6,8 @@ You can use ``h5io`` to make one-line calls for the most common HDF5 tasks, like
 
 .. include:: install.rst
 
+.. include:: tutorial.rst
+
 .. include:: api.rst
 
 .. include:: release.rst
