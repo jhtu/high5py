@@ -113,9 +113,28 @@ class TestH5IO(_unittest.TestCase):
             true_data = getattr(self, dset_name)
             file_path = self.outdir + dset_name + '_saved.h5'
             desc = dset_name + ' description'
+            with _h5py.File(file_path, 'w') as fid:
+                fid['old_data'] = 'old_data'
             _h5io.save_dataset(
                 file_path, true_data, name=dset_name, description=desc)
             self._helper_check_dataset(file_path, dset_name, true_data, desc)
+            with _h5py.File(file_path, 'r') as fid:
+                self.assertFalse('old_data' in fid['/'])
+
+
+    # Check that datasets can be appended correctly
+    def test_append_dataset(self):
+        for dset_name in self.dset_names:
+            true_data = getattr(self, dset_name)
+            file_path = self.outdir + dset_name + '_saved.h5'
+            desc = dset_name + ' description'
+            with _h5py.File(file_path, 'w') as fid:
+                fid['old_data'] = 'old_data'
+            _h5io.append_dataset(
+                file_path, true_data, name=dset_name, description=desc)
+            self._helper_check_dataset(file_path, dset_name, true_data, desc)
+            with _h5py.File(file_path, 'r') as fid:
+                self.assertTrue('old_data' in fid['/'])
 
 
     # Check that datasets can be renamed correctly
