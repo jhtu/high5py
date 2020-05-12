@@ -35,9 +35,6 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
               'sphinx.ext.githubpages',
               'sphinx.ext.napoleon']
-napoleon_google_docstring = False
-napoleon_numpy_docstring = True
-napoleon_use_param = True
 napoleon_use_rtype = False
 
 # Add any paths that contain templates here, relative to this directory.
