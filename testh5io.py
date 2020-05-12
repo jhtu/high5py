@@ -245,7 +245,9 @@ class TestH5IO(_unittest.TestCase):
 
         # Generate data
         datasets = {
-            'x': _np.ones(4), 'y': _np.arange(10), 'z': _np.random.random((5, 6))}
+            'x': _np.ones(4),
+            'y': _np.arange(10),
+            'z': _np.random.random((5, 6))}
         npz_path = self.outdir + 'data.npz'
         _np.savez_compressed(npz_path, **datasets)
 

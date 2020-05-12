@@ -10,7 +10,8 @@ def info(file_path, name='/', return_info=False):
     file_path: str
         Path to HDF5 file.
     name: str, optional
-        HDF5 path to group or dataset.  Defaults to root group ('/').
+        HDF5 group/dataset name (e.g., /group/dataset).  Defaults to root group
+        ('/').
 
     Returns
     -------
@@ -202,7 +203,7 @@ def append_attributes(file_path, attributes, name='data'):
 def to_npz(h5_file_path, npz_file_path, name='/'):
     """Save an HDF5 group/dataset to NPZ (compressed numpy archive) format.
     Subgroups such as path/group/subgroup/dataset will be saved with array names
-    path_group_subgroup_dataset.
+    such as path_group_subgroup_dataset.
 
     Parameters
     ----------
