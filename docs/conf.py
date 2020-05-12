@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'h5io'
-copyright = '2012, Jonathan Tu
+copyright = '2012, Jonathan Tu'
 author = Jonathan Tu
 
 # The version info for the project you're documenting, acts as replacement for
