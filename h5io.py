@@ -45,54 +45,138 @@ def info(file_path, path='/', return_info=False):
         return info_dict
 
 
-# Check that a dataset exists
-def exists(file_path, target_path):
+def exists(file_path, path):
+    """Determine if path exists in HDF5 file.
+
+    Parameters
+    ----------
+    file_path: str
+        Path to HDF5 file.
+    path: str
+        HDF5 path to group or dataset.
+
+    Returns
+    -------
+    bool
+        Boolean describing if path exists in HDF5 file.
+    """
     avail_paths = []
     with _h5py.File(file_path, 'r') as fid:
         fid.visit(avail_paths.append)
-    return target_path in avail_paths
+    return path in avail_paths
 
 
-# Load a dataset
-def load_dataset(file_path, dataset_path):
+def load_dataset(file_path, path):
+    """Load dataset from HDF5 file.
+
+    Parameters
+    ----------
+    file_path: str
+        Path to HDF5 file.
+    path: str
+        HDF5 path to dataset.
+
+    Returns
+    -------
+    array-like, scalar, or str
+        Dataset values will be returned with same type they were saved (usually
+        some sort of numpy array), except that single-element arrays will be
+        returned as scalars.
+    """
     with _h5py.File(file_path, 'r') as fid:
-        data = fid[dataset_path][()]
+        data = fid[path][()]
     return data
 
 
-# Save a dataset
 def save_dataset(
-    file_path, data, dataset_path='data', description=None, truncate=True):
-    if truncate:
+    file_path, data, path='data', description=None, overwrite=True):
+    """Save dataset to HDF5 file (overwrites file by default).
+
+    Parameters
+    ----------
+    file_path: str
+        Path to HDF5 file.
+    data: array-like, scalar, or str
+        Data to save.
+    path: str, optional
+        HDF5 path to dataset.  Can be a multi-level path denoting a dataset
+        within a group, such as '/group/dataset'.  Defaults to 'data'.
+    description: str, optional
+        String describing dataset.  Description is saved as an HDF5 attribute of
+        the dataset.  Defaults to None, for which no description is saved.
+    overwrite: bool
+        If True, saving overwrites the file.  Otherwise, data is appended to the
+        file.  Defaults to True.
+    """
+    if overwrite:
         file_mode = 'w'
     else:
         file_mode = 'a'
     with _h5py.File(file_path, file_mode) as fid:
-        fid.create_dataset(dataset_path, data=data)
+        fid.create_dataset(path, data=data)
         if description is not None:
-            fid[dataset_path].attrs['Description'] = description
+            fid[path].attrs['Description'] = description
 
 
-# Rename a dataset
-def rename_dataset(
-    file_path, old_dataset_path, new_dataset_path, new_description=None):
+def rename_dataset(file_path, old_path, new_path, new_description=None):
+    """Rename group or dataset in HDF5 file.
+
+    Parameters
+    ----------
+    file_path: str
+        Path to HDF5 file.
+    old_path: str
+        Old path to HDF5 group or dataset.
+    new_path: str
+        New path to HDF5 group or dataset.
+    description: str, optional
+        New string describing dataset.  Description is saved as an HDF5
+        attribute of the dataset.  Defaults to None, for which the old
+        description is kept.
+    """
     with _h5py.File(file_path, 'a') as fid:
-        fid[new_dataset_path] = fid[old_dataset_path]
+        fid[new_path] = fid[old_path]
         if new_description is not None:
-            fid[new_dataset_path].attrs['Description'] = new_description
-        del fid[old_dataset_path]
+            fid[new_path].attrs['Description'] = new_description
+        del fid[old_path]
 
 
-# Append a dataset
-def append_dataset(file_path, data, dataset_path='data', description=None):
+def append_dataset(file_path, data, path='data', description=None):
+    """Append dataset to HDF5 file (never overwrites file).
+
+    Parameters
+    ----------
+    file_path: str
+        Path to HDF5 file.
+    data: array-like, scalar, or str
+        Data to save.
+    path: str, optional
+        HDF5 path to dataset.  Can be a multi-level path denoting a dataset
+        within a group, such as '/group/dataset'.  Defaults to 'data'.
+    description: str, optional
+        String describing dataset.  Description is saved as an HDF5 attribute of
+        the dataset.  Defaults to None, for which no description is saved.
+    """
     save_dataset(
-        file_path, data, dataset_path=dataset_path, description=description,
-        truncate=False)
+        file_path, data, path=path, description=description, overwrite=False)
 
 
-# Convert to NPZ (numpy archive) format
 def to_npz(h5_file_path, npz_file_path, path='/'):
+    """Save an HDF5 group or dataset to NPZ (compressed numpy archive) format.
+    Subgroups such as path/group/subgroup/dataset will be saved with array names
+    path_group_subgroup_dataset.
 
+    Parameters
+    ----------
+    h5_file_path: str
+        Path to HDF5 file.
+    npz_file_path: str
+        Path to NPZ file.
+    path: str, optional
+        HDF5 path to group or dataset to save.  Can be a multi-level path
+        denoting a dataset within a group, such as '/group/dataset'.  Defaults
+        to root group ('/').
+    """
     # Open file for processing
     with _h5py.File(h5_file_path, 'r') as fid:
 
@@ -147,7 +231,16 @@ def to_npz(h5_file_path, npz_file_path, path='/'):
 
 # Convert from NPZ (numpy archive) format
 def from_npz(npz_file_path, h5_file_path):
+    """Load data from an NPZ (compressed numpy archive) file and save to HDF5.
+    NPZ array names are preserved.
 
+    Parameters
+    ----------
+    npz_file_path: str
+        Path to NPZ file.
+    h5_file_path: str
+        Path to HDF5 file.
+    """
     # Open file for processing
     with _np.load(npz_file_path) as data:
 
@@ -156,6 +249,6 @@ def from_npz(npz_file_path, h5_file_path):
 
             # Save to HDF5
             if idx == 0:
-                save_dataset(h5_file_path, val, dataset_path=key)
+                save_dataset(h5_file_path, val, path=key)
             else:
-                append_dataset(h5_file_path, val, dataset_path=key)
+                append_dataset(h5_file_path, val, path=key)
