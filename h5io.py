@@ -15,7 +15,7 @@ def info(file_path, name='/', return_info=False):
 
     Returns
     -------
-    dict, optional
+    info: dict, optional
         Dictionary of key, value pairs describing specified file/group/dataset.
         Only provided if return_info is True.
     """
@@ -58,7 +58,7 @@ def exists(file_path, name):
 
     Returns
     -------
-    bool
+    exists: bool
         Boolean describing if path exists in HDF5 file.
     """
     avail_names = []
@@ -79,7 +79,7 @@ def load_dataset(file_path, name):
 
     Returns
     -------
-    array-like, scalar, or str
+    data: array-like, scalar, or str
         Dataset values will be returned with same type they were saved (usually
         some sort of numpy array), except that single-element arrays will be
         returned as scalars.
