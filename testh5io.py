@@ -138,9 +138,9 @@ class TestH5IO(_unittest.TestCase):
 
 
     # Check that datasets can be renamed correctly
-    def test_rename_dataset(self):
+    def test_rename(self):
         for dset_name in self.dset_names:
-            _h5io.rename_dataset(
+            _h5io.rename(
                 self.file_path, dset_name, dset_name + '_mod')
             with _h5py.File(self.file_path, 'r') as fid:
                 self.assertFalse(dset_name in list(fid))
