@@ -33,7 +33,11 @@ import h5io
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.imgmath',
               'sphinx.ext.viewcode',
-              'sphinx.ext.githubpages']
+              'sphinx.ext.githubpages',
+              'sphinx.ext.napoleon']
+napoleon_google_docstring = False
+napoleon_numpy_docstring = True
+napoleon_use_param = False
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
