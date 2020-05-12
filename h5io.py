@@ -3,7 +3,7 @@ import h5py as _h5py
 
 
 def info(file_path, name='/', return_info=False):
-    """Print and return information about HDF5 file, group, or dataset.
+    """Print and return information about HDF5 file/group/dataset.
 
     Parameters
     ----------
@@ -15,7 +15,7 @@ def info(file_path, name='/', return_info=False):
     Returns
     -------
     dict, optional
-        Dictionary of key, value pairs describing specified group or dataset.
+        Dictionary of key, value pairs describing specified file/group/dataset.
         Only provided if return_info is True.
     """
     name = '{}'.format(name)
@@ -46,14 +46,14 @@ def info(file_path, name='/', return_info=False):
 
 
 def exists(file_path, name):
-    """Determine if path exists in HDF5 file.
+    """Determine if group/dataset name exists in HDF5 file.
 
     Parameters
     ----------
     file_path: str
         Path to HDF5 file.
     name: str
-        HDF5 path to group or dataset.
+        HDF5 group/dataset name (e.g., /group/dataset).
 
     Returns
     -------
@@ -74,7 +74,7 @@ def load_dataset(file_path, name):
     file_path: str
         Path to HDF5 file.
     name: str
-        HDF5 path to dataset.
+        HDF5 dataset name (e.g., /group/dataset).
 
     Returns
     -------
@@ -99,8 +99,7 @@ def save_dataset(
     data: array-like, scalar, or str
         Data to save.
     name: str, optional
-        HDF5 path to dataset.  Can be a multi-level path denoting a dataset
-        within a group, such as '/group/dataset'.  Defaults to 'data'.
+        HDF5 dataset name (e.g., /group/dataset).  Defaults to 'data'.
     description: str, optional
         String describing dataset.  Description is saved as an HDF5 attribute of
         the dataset.  Defaults to None, for which no description is saved.
@@ -118,7 +117,7 @@ def save_dataset(
             fid[name].attrs['Description'] = description
 
 
-def rename_dataset(file_path, old_name, new_name, new_description=None):
+def rename(file_path, old_name, new_name, new_description=None):
     """Rename group/dataset in HDF5 file.
 
     Parameters
@@ -126,9 +125,9 @@ def rename_dataset(file_path, old_name, new_name, new_description=None):
     file_path: str
         Path to HDF5 file.
     old_name: str
-        Old path to HDF5 group/dataset.
+        Old HDF5 name (e.g., /group/old_dataset).
     new_name: str
-        New path to HDF5 group/dataset.
+        New HDF5 name (e.g., /group/new_dataset).
     description: str, optional
         New string describing dataset.  Description is saved as an HDF5
         attribute of the dataset.  Defaults to None, for which the old
@@ -151,8 +150,7 @@ def append_dataset(file_path, data, name='data', description=None):
     data: array-like, scalar, or str
         Data to save.
     name: str, optional
-        HDF5 path to dataset.  Can be a multi-level path denoting a dataset
-        within a group, such as '/group/dataset'.  Defaults to 'data'.
+        HDF5 dataset name (e.g., /group/dataset).  Defaults to 'data'.
     description: str, optional
         String describing dataset.  Description is saved as an HDF5 attribute of
         the dataset.  Defaults to None, for which no description is saved.
@@ -172,8 +170,7 @@ def save_attributes(file_path, attributes, name='data', overwrite=True):
     attributes: dict
         Attributes to save.
     name: str, optional
-        HDF5 path to group/dataset.  Can be a multi-level path denoting a
-        dataset within a group, such as '/group/dataset'.  Defaults to 'data'.
+        HDF5 group/dataset name (e.g., /group/dataset).  Defaults to 'data'.
     overwrite: bool
         If True, saving overwrites existing attributes.  Otherwise, new
         attributes are appended to existing ones.  Defaults to True.
@@ -197,8 +194,7 @@ def append_attributes(file_path, attributes, name='data'):
     attributes: dict
         Attributes to append.
     name: str, optional
-        HDF5 path to group/dataset.  Can be a multi-level path denoting a
-        dataset within a group, such as '/group/dataset'.  Defaults to 'data'.
+        HDF5 group/dataset name (e.g., /group/dataset).  Defaults to 'data'.
     """
     save_attributes(file_path, attributes, name=name, overwrite=False)
 
@@ -214,10 +210,9 @@ def to_npz(h5_file_path, npz_file_path, name='/'):
         Path to HDF5 file.
     npz_file_path: str
         Path to NPZ file.
-    path: str, optional
-        HDF5 path to group/dataset to save.  Can be a multi-level path
-        denoting a dataset within a group, such as '/group/dataset'.  Defaults
-        to root group ('/').
+    name: str, optional
+        HDF5 group/dataset name (e.g., /group/dataset).  Defaults to root group
+        ('/').
     """
     # Open file for processing
     with _h5py.File(h5_file_path, 'r') as fid:
