@@ -147,6 +147,34 @@ class TestH5IO(_unittest.TestCase):
                 self.assertTrue(dset_name + '_mod' in list(fid))
 
 
+    # Check that attributes can be saved correctly
+    def test_save_attributes(self):
+        name = 'data'
+        attributes = {'attr1': 1, 'attr2': 'two'}
+        with _h5py.File(self.file_path, 'w') as fid:
+            fid[name] = 'data'
+            fid[name].attrs['old_attr'] = 'old'
+        _h5io.save_attributes(self.file_path, attributes, name=name)
+        with _h5py.File(self.file_path, 'r') as fid:
+            for key, val in attributes.items():
+                self.assertEqual(fid[name].attrs[key], val)
+            self.assertFalse('old_attr' in fid[name].attrs)
+
+
+    # Check that attributes can be appended correctly
+    def test_append_attributes(self):
+        name = 'data'
+        attributes = {'attr1': 1, 'attr2': 'two'}
+        with _h5py.File(self.file_path, 'w') as fid:
+            fid[name] = 'data'
+            fid[name].attrs['old_attr'] = 'old'
+            _h5io.append_attributes(self.file_path, attributes, name=name)
+        with _h5py.File(self.file_path, 'r') as fid:
+            for key, val in attributes.items():
+                self.assertEqual(fid[name].attrs[key], val)
+            self.assertTrue('old_attr' in fid[name].attrs)
+
+
     # Check that HDF5 files can be correctly converted to NPZ files
     def test_to_npz(self):
 
