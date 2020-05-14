@@ -49,8 +49,8 @@ To save the dataset with a custom name, we use the ``name`` parameter::
 Now the dataset is called "x."
 
 
-Appending data
---------------
+Appending data (safe saving)
+----------------------------
 
 By default, :meth:`h5io.h5io.save_dataset` overwrites files.
 To add a dataset to the file, we use :meth:`h5io.h5io.append_dataset`, which is equivalent to calling :meth:`h5io.h5io.save_dataset` with ``overwrite=False``::
