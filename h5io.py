@@ -12,6 +12,8 @@ def info(file_path, name='/', return_info=False):
     name: str, optional
         HDF5 group/dataset name (e.g., /group/dataset).  Defaults to root group
         ('/').
+    return_info: bool, optional
+        If True, return a dictionary of results.  Defaults to False.
 
     Returns
     -------
@@ -44,6 +46,38 @@ def info(file_path, name='/', return_info=False):
             + '}: {}').format(key, val))
     if return_info:
         return info_dict
+
+
+def list_all(file_path, name='/', return_info=False):
+    """List all groups and datasets in HDF5 file or group.
+
+    Parameters
+    ----------
+    file_path: str
+        Path to HDF5 file.
+    name: str, optional
+        HDF5 group name (e.g., /group).  Defaults to root group ('/').
+    return_into: bool, optional
+        If True, return a dictionary of results.  Defaults to False.
+
+    Returns
+    -------
+    info: dict, optional
+        Dictionary of key, value pairs describing specified file/group.  Only
+        provided if return_info is True.
+    """
+    all_names = []
+    all_items = {}
+    with _h5py.File(file_path, 'r') as fid:
+        fid[name].visit(all_names.append)
+        max_len = max([len(name) for name in all_names])
+        def print_item(name, obj):
+            all_items[name] = str(obj)
+            print(
+                ('{:<' + '{:d}'.format(max_len) + '}    {}').format(name, obj))
+        fid[name].visititems(print_item)
+    if return_info:
+        return all_items
 
 
 def exists(file_path, name):

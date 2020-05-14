@@ -122,7 +122,7 @@ Querying files
 --------------
 
 Sometimes it is useful to query a dataset and look at its contents.
-As we have seen above, we can use :meth:`h5io.h5io.info` to get info on groups and datasets.  If we set ``return_info=True``, then we can also return a dictionary of the information::
+As we have seen above, we can use :meth:`h5io.h5io.info` to get info on groups and datasets.  If we set ``return_info=True``, then we can also return a dictionary of the results::
 
   print('FILE/ROOT INFO:')
   h5io.info('test.h5')
@@ -136,6 +136,15 @@ We can also check for the existence of a particular dataset or group using :meth
 
   print('Dataset x exists:', h5io.exists('test.h5', 'x'))
   print('Dataset z exists:', h5io.exists('test.h5', 'z'))
+
+Finally, we can use :meth:`h5io.h5io.list_all` to recursively list the contents of a file or group, using the ``return_info`` parameter to return a dictionary of the results::
+
+  print('FILE/ROOT INFO:')
+  info = h5io.list_all('test.h5')
+  print('\nGROUP INFO:')
+  info = h5io.list_all('test.h5', name='xy_group', return_info=True)
+  print('\nGROUP INFO DICT:')
+  print(info)
 
 
 Saving attributes
