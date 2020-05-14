@@ -1,7 +1,7 @@
 Tutorial
 ========
 
-The following examples demonstrate how to use the `h5io` module to interact with HDF5 files quickly and easily.
+The following examples demonstrate how to use the ``h5io`` module to interact with HDF5 files quickly and easily.
 They are also available in the source code as a Jupyter notebook.
 
 Setup
@@ -41,7 +41,7 @@ We can check this using the :meth:`h5io.h5io.info` function::
   h5io.info('test.h5')
 
 We see that as expected, the file ``test.h5`` contains a single dataset called "data."
-To save the dataset with a custom name, we use the ``name`` parameter:
+To save the dataset with a custom name, we use the ``name`` parameter::
 
   h5io.save_dataset('test.h5', x, name='x')
   h5io.info('test.h5')
@@ -70,7 +70,7 @@ However, if we attempt to append a dataset "y" to a file that already contains a
   except RuntimeError as err:
       print('RuntimeError: {}'.format(err))
 
-As such, users who wish to avoid overwriting files and/or datasets can use :meth:`h5io.h5io.append_dataset` as a safer alternative to `save_dataset`.
+As such, users who wish to avoid overwriting files and/or datasets can use :meth:`h5io.h5io.append_dataset` as a safer alternative to :meth:`h5io.h5io.save_dataset`.
 
 
 Saving data with descriptions
