@@ -101,15 +101,15 @@ def exists(file_path, name):
     return name in avail_names
 
 
-def load_dataset(file_path, name):
+def load_dataset(file_path, name='data', start_index=0, end_index=-1):
     """Load dataset from HDF5 file.
 
     Parameters
     ----------
     file_path: str
         Path to HDF5 file.
-    name: str
-        HDF5 dataset name (e.g., /group/dataset).
+    name: str, optional
+        HDF5 dataset name (e.g., /group/dataset).  Defaults to 'data'.
 
     Returns
     -------

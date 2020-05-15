@@ -110,12 +110,19 @@ Loading data
 
 Loading data is simple using :meth:`h5io.h5io.load_dataset`::
 
-  x_load = h5io.load_dataset('test.h5', 'x')
+  x_load = h5io.load_dataset('test.h5', name='x')
   print(
       'Max diff b/w orig and loaded x: {:.2e}'.format(np.abs(x - x_load).max()))
-  y_load = h5io.load_dataset('test.h5', 'group/y')
+  y_load = h5io.load_dataset('test.h5', name='group/y')
   print(
       'Max diff b/w orig and loaded y: {:.2e}'.format(np.abs(y - y_load).max()))
+
+Note that the ``name`` parameter defaults to "data," so that :meth:`h5io.h5io.save_dataset` and :meth:`h5io.h5io.load_dataset` have compatible defaults::
+
+  h5io.save_dataset('test_defaults.h5', x)
+  x_load = h5io.load_dataset('test_defaults.h5')
+  print(
+      'Max diff b/w orig and loaded x: {:.2e}'.format(np.abs(x - x_load).max()))
 
 
 Querying files
