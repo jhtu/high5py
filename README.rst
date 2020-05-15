@@ -33,3 +33,9 @@ Tutorial
 ========
 
 A tutorial is provided as a Juptyer notebook (``tutorial.ipynb``), as well as in the online documentation at https://h5io.readthedocs.io.
+
+
+Dependencies
+============
+
+``h5io`` requires ``numpy`` and ``h5py``.
