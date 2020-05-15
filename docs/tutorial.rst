@@ -229,3 +229,14 @@ When converting an NPZ file to HDF5, array names are preserved::
   np.savez_compressed('test.npz', x_npz=x, y_npz=y)
   h5io.from_npz('test.npz', 'test.h5')
   h5io.info('test.h5')
+
+
+Cleanup
+-------
+
+We finish by removing any generated test files::
+
+  for filepath in glob.glob('test*.h5'):
+      os.remove(filepath)
+  for filepath in glob.glob('test*.npz'):
+      os.remove(filepath)
