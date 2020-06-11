@@ -124,7 +124,8 @@ def load_dataset(file_path, name='data', start_index=0, end_index=-1):
 
 
 def save_dataset(
-    file_path, data, name='data', description=None, overwrite=True):
+    file_path, data, name='data', description=None, overwrite=True,
+    compression_level=None):
     """Save dataset to HDF5 file (overwrites file by default).
 
     Parameters
@@ -141,13 +142,23 @@ def save_dataset(
     overwrite: bool
         If True, saving overwrites the file.  Otherwise, data is appended to the
         file.  Defaults to True.
+    compression_level: int or None, optional
+        Integer from 0 to 9 specifying compression level for gzip filter, which
+        is available on all h5py installations and offers good compression with
+        moderate speed.  Defaults to None, for which no compression/filter is
+        applied.
     """
     if overwrite:
         file_mode = 'w'
     else:
         file_mode = 'a'
     with _h5py.File(file_path, file_mode) as fid:
-        fid.create_dataset(name, data=data)
+        if compression_level is not None:
+            fid.create_dataset(
+                name, data=data, compression='gzip',
+                compression_opts=compression_level)
+        else:
+            fid.create_dataset(name, data=data)
         if description is not None:
             fid[name].attrs['Description'] = description
 
@@ -175,7 +186,8 @@ def rename(file_path, old_name, new_name, new_description=None):
         del fid[old_name]
 
 
-def append_dataset(file_path, data, name='data', description=None):
+def append_dataset(
+    file_path, data, name='data', description=None, compression_level=None):
     """Append dataset to HDF5 file (never overwrites file).
 
     Parameters
@@ -189,9 +201,15 @@ def append_dataset(file_path, data, name='data', description=None):
     description: str, optional
         String describing dataset.  Description is saved as an HDF5 attribute of
         the dataset.  Defaults to None, for which no description is saved.
+    compression_level: int or None, optional
+        Integer from 0 to 9 specifying compression level for gzip filter, which
+        is available on all h5py installations and offers good compression with
+        moderate speed.  Defaults to None, for which no compression/filter is
+        applied.
     """
     save_dataset(
-        file_path, data, name=name, description=description, overwrite=False)
+        file_path, data, name=name, description=description, overwrite=False,
+        compression_level=compression_level)
 
 
 def save_attributes(file_path, attributes, name='data', overwrite=True):
