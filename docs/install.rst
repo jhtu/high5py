@@ -18,5 +18,5 @@ The documentation is available at https://h5io.readthedocs.io.
 
 You can also build the documentation manually with Sphinx
 (http://sphinx.pocoo.org).
-From the ``h5io`` directory, run ``sphinx-build docs docs/build`` and then open
-``docs/build/index.html`` in a web browser.
+From the ``h5io`` directory, run ``sphinx-build docs docs/_build`` and then open
+``docs/_build/index.html`` in a web browser.
