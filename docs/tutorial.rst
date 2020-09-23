@@ -31,12 +31,12 @@ Finally, we create some data that we will later save to disk::
 Saving data
 -----------
 
-We can save data using the :meth:`h5io.h5io.save_dataset` function, which **overwrites the file by default** (to avoid this, see the section below on appending data)::
+We can save data using the :meth:`h5io.save_dataset` function, which **overwrites the file by default** (to avoid this, see the section below on appending data)::
 
   h5io.save_dataset('test.h5', x)
 
 Using the syntax above, the data is saved to the file "test.h5" with the default dataset name "data."
-We can check this using the :meth:`h5io.h5io.info` function::
+We can check this using the :meth:`h5io.info` function::
 
   h5io.info('test.h5')
 
@@ -52,13 +52,13 @@ Now the dataset is called "x."
 Appending data (safe saving)
 ----------------------------
 
-By default, :meth:`h5io.h5io.save_dataset` overwrites files.
-To add a dataset to the file, we use :meth:`h5io.h5io.append_dataset`, which is equivalent to calling :meth:`h5io.h5io.save_dataset` with ``overwrite=False``::
+By default, :meth:`h5io.save_dataset` overwrites files.
+To add a dataset to the file, we use :meth:`h5io.append_dataset`, which is equivalent to calling :meth:`h5io.save_dataset` with ``overwrite=False``::
 
   h5io.append_dataset('test.h5', y, name='y')
   h5io.info('test.h5')
 
-Note that we can use :meth:`h5io.h5io.append_dataset` to save a new file as well::
+Note that we can use :meth:`h5io.append_dataset` to save a new file as well::
 
   h5io.append_dataset('test2.h5', y, name='y')
   h5io.info('test2.h5')
@@ -70,19 +70,19 @@ However, if we attempt to append a dataset "y" to a file that already contains a
   except RuntimeError as err:
       print('RuntimeError: {}'.format(err))
 
-As such, users who wish to avoid overwriting files and/or datasets can use :meth:`h5io.h5io.append_dataset` as a safer alternative to :meth:`h5io.h5io.save_dataset`.
+As such, users who wish to avoid overwriting files and/or datasets can use :meth:`h5io.append_dataset` as a safer alternative to :meth:`h5io.save_dataset`.
 
 
 Saving data with descriptions
 -----------------------------
 
 Since one of the advantages of HDF5 is that it is a self-describing file format, ``h5io`` provides an easy way to add descriptions when saving datasets.
-To do so, simply use the ``description`` parameter (available for both :meth:`h5io.h5io.save_dataset` and :meth:`h5io.h5io.append_dataset`)::
+To do so, simply use the ``description`` parameter (available for both :meth:`h5io.save_dataset` and :meth:`h5io.append_dataset`)::
 
   h5io.save_dataset('test.h5', x, name='x', description='x data')
   h5io.append_dataset('test.h5', x, name='y', description='y data')
 
-We can check the value of the dataset descriptions by using the :meth:`h5io.h5io.info` function with the appropriate ``name`` value::
+We can check the value of the dataset descriptions by using the :meth:`h5io.info` function with the appropriate ``name`` value::
 
   h5io.info('test.h5', name='x')
   h5io.info('test.h5', name='y')
@@ -100,7 +100,7 @@ Now we see that ``test.h5`` contains two datasets ("x" and "y") and a group ("xy
 
   h5io.info('test.h5')
 
-We can get info on the contents of the group using the :meth:`h5io.h5io.info` function with the ``name`` parameter::
+We can get info on the contents of the group using the :meth:`h5io.info` function with the ``name`` parameter::
 
   h5io.info('test.h5', name='group')
 
@@ -108,7 +108,7 @@ We can get info on the contents of the group using the :meth:`h5io.h5io.info` fu
 Loading data
 ------------
 
-Loading data is simple using :meth:`h5io.h5io.load_dataset`::
+Loading data is simple using :meth:`h5io.load_dataset`::
 
   x_load = h5io.load_dataset('test.h5', name='x')
   print(
@@ -117,7 +117,7 @@ Loading data is simple using :meth:`h5io.h5io.load_dataset`::
   print(
       'Max diff b/w orig and loaded y: {:.2e}'.format(np.abs(y - y_load).max()))
 
-Note that the ``name`` parameter defaults to "data," so that :meth:`h5io.h5io.save_dataset` and :meth:`h5io.h5io.load_dataset` have compatible defaults::
+Note that the ``name`` parameter defaults to "data," so that :meth:`h5io.save_dataset` and :meth:`h5io.load_dataset` have compatible defaults::
 
   h5io.save_dataset('test_defaults.h5', x)
   x_load = h5io.load_dataset('test_defaults.h5')
@@ -129,7 +129,7 @@ Querying files
 --------------
 
 Sometimes it is useful to query a dataset and look at its contents.
-As we have seen above, we can use :meth:`h5io.h5io.info` to get info on groups and datasets.  If we set ``return_info=True``, then we can also return a dictionary of the results::
+As we have seen above, we can use :meth:`h5io.info` to get info on groups and datasets.  If we set ``return_info=True``, then we can also return a dictionary of the results::
 
   print('FILE/ROOT INFO:')
   h5io.info('test.h5')
@@ -139,12 +139,12 @@ As we have seen above, we can use :meth:`h5io.h5io.info` to get info on groups a
   info = h5io.info('test.h5', name='group/x', return_info=True)
   print(info)
 
-We can also check for the existence of a particular dataset or group using :meth:`h5io.h5io.exists`::
+We can also check for the existence of a particular dataset or group using :meth:`h5io.exists`::
 
   print('Dataset x exists:', h5io.exists('test.h5', 'x'))
   print('Dataset z exists:', h5io.exists('test.h5', 'z'))
 
-Finally, we can use :meth:`h5io.h5io.list_all` to recursively list the contents of a file or group, using the ``return_info`` parameter to return a dictionary of the results::
+Finally, we can use :meth:`h5io.list_all` to recursively list the contents of a file or group, using the ``return_info`` parameter to return a dictionary of the results::
 
   print('FILE/ROOT INFO:')
   info = h5io.list_all('test.h5')
@@ -158,7 +158,7 @@ Saving attributes
 -----------------
 
 As alluded to above, part of what makes HDF5 a self-describing file format is that groups and datasets can have associated attributes.
-We can use :meth:`h5io.h5io.save_attributes` or :meth:`h5io.h5io.append_attributes` to add attributes to a group or dataset, with the former overwriting any existing attributes and the latter simply adding to them::
+We can use :meth:`h5io.save_attributes` or :meth:`h5io.append_attributes` to add attributes to a group or dataset, with the former overwriting any existing attributes and the latter simply adding to them::
 
   h5io.save_dataset('test.h5', 'x', name='x')
   print('DATA W/O ATTRIBUTES')
@@ -174,7 +174,7 @@ We can use :meth:`h5io.h5io.save_attributes` or :meth:`h5io.h5io.append_attribut
 Renaming objects
 ----------------
 
-We can easily rename a dataset or group using :meth:`h5io.h5io.rename`::
+We can easily rename a dataset or group using :meth:`h5io.rename`::
 
   print('\nORIGINAL DATA')
   h5io.info('test.h5')
@@ -190,7 +190,7 @@ Working with NPZ files
 
 Sometimes when collaborating, it is useful to have code with as few dependencies as possible.
 To help with that, ``h5io`` offers methods for converting HDF5 files to and from NPZ (numpy archive) format.
-For instance, the following code saves data to HDF5, then converts the entire contents of that file to NPZ using :meth:`h5io.h5io.to_npz`::
+For instance, the following code saves data to HDF5, then converts the entire contents of that file to NPZ using :meth:`h5io.to_npz`::
 
   h5io.save_dataset('test.h5', x, name='xy_group/x')
   h5io.append_dataset('test.h5', y, name='xy_group/y')
