@@ -1,7 +1,7 @@
 *~
 *.pyc
 __pycache__
-build
+docs/_*
 dist
 h5io.egg*
 .ipynb_checkpoints
