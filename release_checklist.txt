@@ -1,0 +1,19 @@
+Make sure to do these things before releasing new versions:
+- Run tests
+- Run tutorial
+- Update release notes
+- Change version number
+
+Then package the code using
+    python setup.py sdist
+
+Upload the distribution using
+    twine upload dist/*
+
+Build the documentation on readthedocs.org
+
+If everything looks ok with the release, create a tag using
+    git tag -a vX.X.X
+
+Then push the tags to the main repo using
+    git push --tags
