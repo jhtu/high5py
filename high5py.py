@@ -226,6 +226,34 @@ def append_dataset(
         compression_level=compression_level)
 
 
+def replace_dataset(
+    file_path, data, name='data', description=None, compression_level=None):
+    """Replace/overwrite a dataset in an HDF5 file (do not overwrite the whole
+    file).
+
+    Parameters
+    ----------
+    file_path: str
+        Path to HDF5 file.
+    data: array-like, scalar, or str
+        Data to save.
+    name: str, optional
+        HDF5 dataset name (e.g., /group/dataset).  Defaults to 'data'.
+    description: str, optional
+        String describing dataset.  Description is saved as an HDF5 attribute of
+        the dataset.  Defaults to None, for which no description is saved.
+    compression_level: int or None, optional
+        Integer from 0 to 9 specifying compression level for gzip filter, which
+        is available on all h5py installations and offers good compression with
+        moderate speed.  Defaults to None, for which no compression/filter is
+        applied.
+    """
+    delete(file_path, name)
+    append_dataset(
+        file_path, data, name=name, description=description,
+        compression_level=compression_level)
+
+
 def save_attributes(file_path, attributes, name='data', overwrite=True):
     """Save HDF5 group/dataset attributes (overwrites existing attributes by
     default).

@@ -161,6 +161,36 @@ class TestHigh5Py(_unittest.TestCase):
                     self.assertTrue('old_data' in fid['/'])
 
 
+    # Check that datasets can be replaced correctly, with and without
+    # compression
+    def test_replace_dataset(self):
+        for dset_name, var_name in zip(self.dset_names, self.var_names):
+            for comp_lvl in [None, 4, 9]:
+                true_data = getattr(self, var_name)
+                replacement_data = 2 * true_data
+                file_path = self.outdir + var_name + '_saved.h5'
+                desc = dset_name + ' description'
+                with _h5py.File(file_path, 'w') as fid:
+                    fid['old_data'] = 'old_data'
+                if 'scalar' in dset_name:
+                    _hi5.append_dataset(
+                        file_path, true_data, name=dset_name, description=desc)
+                    _hi5.replace_dataset(
+                        file_path, replacement_data, name=dset_name,
+                        description=desc)
+                else:
+                    _hi5.append_dataset(
+                        file_path, true_data, name=dset_name, description=desc,
+                        compression_level=comp_lvl)
+                    _hi5.replace_dataset(
+                        file_path, replacement_data, name=dset_name,
+                        description=desc, compression_level=comp_lvl)
+                self._helper_check_dataset(
+                    file_path, dset_name, replacement_data, desc)
+                with _h5py.File(file_path, 'r') as fid:
+                    self.assertTrue('old_data' in fid['/'])
+
+
     # Check that groups and datasets can be deleted correctly
     def test_delete(self):
         for grp in self.dtype_names:
