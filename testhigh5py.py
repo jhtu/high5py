@@ -161,17 +161,23 @@ class TestHigh5Py(_unittest.TestCase):
                     self.assertTrue('old_data' in fid['/'])
 
 
-    # Check that datasets can be renamed correctly
-    # Check that datasets can be renamed correctly
+    # Check that groups and datasets can be renamed correctly
     def test_rename(self):
-        for dset_name in self.dset_names:
-            _hi5.rename(
-                self.file_path, dset_name, dset_name + '_mod')
+        for grp in self.dtype_names:
+            _hi5.rename(self.file_path, grp, grp + '_mod')
+            new_grp = '{}_mod'.format(grp)
             with _h5py.File(self.file_path, 'r') as fid:
-                grp, dset = dset_name.split('/')
-                self.assertTrue(grp in list(fid))
-                self.assertFalse(dset in list(fid[grp]))
-                self.assertTrue(dset + '_mod' in list(fid[grp]))
+                self.assertFalse(grp in list(fid))
+                self.assertTrue(new_grp in list(fid))
+
+            for dset in self.array_types:
+                new_dset = '{}_mod'.format(dset)
+                _hi5.rename(
+                    self.file_path,
+                    '{}/{}'.format(new_grp, dset),
+                    '{}/{}'.format(new_grp, new_dset))
+                with _h5py.File(self.file_path, 'r') as fid:
+                    self.assertTrue(new_dset in list(fid[new_grp]))
 
 
     # Check that attributes can be saved correctly
