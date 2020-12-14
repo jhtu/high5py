@@ -1,9 +1,9 @@
 Installation
 ============
 
-To run ``h5io``, first download the source code from Github::
+To run ``high5py``, first download the source code from Github::
 
-  git clone git://github.com:jhtu/h5io.git
+  git clone git://github.com:jhtu/high5py.git
 
 Next, navigate to the directory containing the source code, then build and install the package::
 
@@ -12,11 +12,11 @@ Next, navigate to the directory containing the source code, then build and insta
 
 To be sure the code is working, run the unit tests::
 
-  python -c 'import h5io; h5io.run_all_tests()'
+  python -c 'import high5py as hi5; hi5.run_all_tests()'
 
-The documentation is available at https://h5io.readthedocs.io.
+The documentation is available at https://high5py.readthedocs.io.
 
 You can also build the documentation manually with Sphinx
 (http://sphinx.pocoo.org).
-From the ``h5io`` directory, run ``sphinx-build docs docs/_build`` and then open
+From the ``high5py`` directory, run ``sphinx-build docs docs/_build`` and then open
 ``docs/_build/index.html`` in a web browser.

@@ -21,11 +21,11 @@ else:
 
 # Setup
 setup(
-    name='h5io',
+    name='high5py',
     version=__version__,
     description='Interact with HDF5 files using one-line function calls.',
     author='Jonathan Tu',
-    url='http://h5io.readthedocs.io',
+    url='http://high5py.readthedocs.io',
     maintainer='Jonathan Tu',
     license='Free BSD',
     classifiers=[
@@ -41,7 +41,7 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3'
     ],
-    packages=['h5io'],
-    package_dir={'h5io': here},
+    packages=['high5py'],
+    package_dir={'high5py': here},
     install_requires=['h5py', 'numpy']
 )

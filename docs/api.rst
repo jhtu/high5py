@@ -1,5 +1,5 @@
 Full API
 ========
 
-.. automodule:: h5io
+.. automodule:: high5py
    :members:

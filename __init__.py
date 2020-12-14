@@ -1,4 +1,4 @@
 # Set up top level namespace
 from ._version import __version__
-from .h5io import *
-from .testh5io import run_all_tests
+from .high5py import *
+from .testhigh5py import run_all_tests

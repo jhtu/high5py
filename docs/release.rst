@@ -1,7 +1,7 @@
 Release notes
 =============
 
-h5io 0.1
---------
+high5py 0.1
+-----------
 
 First release version.

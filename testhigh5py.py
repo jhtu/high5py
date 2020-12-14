@@ -4,7 +4,7 @@ import shutil as _shutil
 
 import numpy as _np
 import h5py as _h5py
-import h5io as _h5io
+import high5py as _hi5
 
 
 def run_all_tests():
@@ -13,7 +13,7 @@ def run_all_tests():
     _unittest.TextTestRunner(buffer=True).run(test_suites)
 
 
-class TestH5IO(_unittest.TestCase):
+class TestHigh5Py(_unittest.TestCase):
     def setUp(self):
         self.outdir = _os.path.join(_os.path.dirname(__file__), 'tmp/')
         self.file_path = self.outdir + 'test_file.py'
@@ -93,16 +93,16 @@ class TestH5IO(_unittest.TestCase):
     def test_exists(self):
         with _h5py.File(self.file_path, 'w') as fid:
             fid['existing/dataset'] = 'data_string'
-        self.assertTrue(_h5io.exists(self.file_path, 'existing'))
-        self.assertTrue(_h5io.exists(self.file_path, 'existing/dataset'))
-        self.assertFalse(_h5io.exists(self.file_path, 'existing/other'))
-        self.assertFalse(_h5io.exists(self.file_path, 'nonexistent/dataset'))
+        self.assertTrue(_hi5.exists(self.file_path, 'existing'))
+        self.assertTrue(_hi5.exists(self.file_path, 'existing/dataset'))
+        self.assertFalse(_hi5.exists(self.file_path, 'existing/other'))
+        self.assertFalse(_hi5.exists(self.file_path, 'nonexistent/dataset'))
 
 
     # Check that datasets can be loaded correctly
     def test_load_dataset(self):
         for dset_name in self.dset_names:
-            loaded_data = _h5io.load_dataset(self.file_path, dset_name)
+            loaded_data = _hi5.load_dataset(self.file_path, dset_name)
             true_data = getattr(self, dset_name)
             self._helper_assert_equal(loaded_data, true_data)
 
@@ -117,10 +117,10 @@ class TestH5IO(_unittest.TestCase):
                 with _h5py.File(file_path, 'w') as fid:
                     fid['old_data'] = 'old_data'
                 if 'scalar' in dset_name:
-                    _h5io.save_dataset(
+                    _hi5.save_dataset(
                         file_path, true_data, name=dset_name, description=desc)
                 else:
-                    _h5io.save_dataset(
+                    _hi5.save_dataset(
                         file_path, true_data, name=dset_name, description=desc,
                         compression_level=comp_lvl)
                 self._helper_check_dataset(
@@ -140,10 +140,10 @@ class TestH5IO(_unittest.TestCase):
                 with _h5py.File(file_path, 'w') as fid:
                     fid['old_data'] = 'old_data'
                 if 'scalar' in dset_name:
-                    _h5io.append_dataset(
+                    _hi5.append_dataset(
                         file_path, true_data, name=dset_name, description=desc)
                 else:
-                    _h5io.append_dataset(
+                    _hi5.append_dataset(
                         file_path, true_data, name=dset_name, description=desc,
                         compression_level=comp_lvl)
                 self._helper_check_dataset(
@@ -155,7 +155,7 @@ class TestH5IO(_unittest.TestCase):
     # Check that datasets can be renamed correctly
     def test_rename(self):
         for dset_name in self.dset_names:
-            _h5io.rename(
+            _hi5.rename(
                 self.file_path, dset_name, dset_name + '_mod')
             with _h5py.File(self.file_path, 'r') as fid:
                 self.assertFalse(dset_name in list(fid))
@@ -169,7 +169,7 @@ class TestH5IO(_unittest.TestCase):
         with _h5py.File(self.file_path, 'w') as fid:
             fid[name] = 'data'
             fid[name].attrs['old_attr'] = 'old'
-        _h5io.save_attributes(self.file_path, attributes, name=name)
+        _hi5.save_attributes(self.file_path, attributes, name=name)
         with _h5py.File(self.file_path, 'r') as fid:
             for key, val in attributes.items():
                 self.assertEqual(fid[name].attrs[key], val)
@@ -183,7 +183,7 @@ class TestH5IO(_unittest.TestCase):
         with _h5py.File(self.file_path, 'w') as fid:
             fid[name] = 'data'
             fid[name].attrs['old_attr'] = 'old'
-            _h5io.append_attributes(self.file_path, attributes, name=name)
+            _hi5.append_attributes(self.file_path, attributes, name=name)
         with _h5py.File(self.file_path, 'r') as fid:
             for key, val in attributes.items():
                 self.assertEqual(fid[name].attrs[key], val)
@@ -208,7 +208,7 @@ class TestH5IO(_unittest.TestCase):
 
         # Specify root level, which should save all datasets
         npz_path = self.outdir + 'data.npz'
-        _h5io.to_npz(h5_path, npz_path)
+        _hi5.to_npz(h5_path, npz_path)
         with _np.load(npz_path) as npz_data:
             for key, val in datasets.items():
                 _np.testing.assert_array_equal(npz_data[key], val)
@@ -223,7 +223,7 @@ class TestH5IO(_unittest.TestCase):
         # the datasets in that group, and will also affect the names of the
         # arrays in the NPZ file
         npz_path = self.outdir + 'data.npz'
-        _h5io.to_npz(h5_path, npz_path, name='group1')
+        _hi5.to_npz(h5_path, npz_path, name='group1')
         with _np.load(npz_path) as npz_data:
             for key, val in datasets.items():
                 _np.testing.assert_array_equal(
@@ -233,7 +233,7 @@ class TestH5IO(_unittest.TestCase):
                     ['subgroup{:d}_{}.npy'.format(idx, key)
                      for idx in range(2)
                      for key in sorted(datasets.keys())])
-        _h5io.to_npz(h5_path, npz_path, name='group1/subgroup1')
+        _hi5.to_npz(h5_path, npz_path, name='group1/subgroup1')
         with _np.load(npz_path) as npz_data:
             for key, val in datasets.items():
                 _np.testing.assert_array_equal(npz_data[key], val)
@@ -244,11 +244,11 @@ class TestH5IO(_unittest.TestCase):
         # Test the specification of datasets as the path, which should save just
         # those datasets
         npz_path = self.outdir + 'data.npz'
-        _h5io.to_npz(h5_path, npz_path, name='x')
+        _hi5.to_npz(h5_path, npz_path, name='x')
         with _np.load(npz_path) as npz_data:
             _np.testing.assert_array_equal(npz_data['x'], datasets['x'])
             self.assertEqual(npz_data._files, ['x.npy'])
-        _h5io.to_npz(h5_path, npz_path, name=['x', 'y'])
+        _hi5.to_npz(h5_path, npz_path, name=['x', 'y'])
         with _np.load(npz_path) as npz_data:
             _np.testing.assert_array_equal(npz_data['x'], datasets['x'])
             _np.testing.assert_array_equal(npz_data['y'], datasets['y'])
@@ -268,7 +268,7 @@ class TestH5IO(_unittest.TestCase):
 
         # Convert data
         h5_path = self.outdir + 'data.h5'
-        _h5io.from_npz(npz_path, h5_path)
+        _hi5.from_npz(npz_path, h5_path)
         with _h5py.File(h5_path, 'r') as fid:
             for key, val in datasets.items():
                 _np.testing.assert_array_equal(fid[key][()], val)

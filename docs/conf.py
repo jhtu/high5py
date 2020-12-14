@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'h5io'
+project = 'high5py'
 copyright = '2012, Jonathan H. Tu'
 author = 'Jonathan H. Tu'
 
