@@ -73,6 +73,22 @@ However, if we attempt to append a dataset "y" to a file that already contains a
 As such, users who wish to avoid overwriting files and/or datasets can use :meth:`hi5.append_dataset` as a safer alternative to :meth:`hi5.save_dataset`.
 
 
+Replacing data
+--------------
+
+It is sometimes desirable to overwrite a single dataset without overwriting the entire file.
+This can be done using :meth:`hi5.replace_dataset`, which deletes the existing dataset and replaces it with the specified one.
+Here we will replace the dataset "x" with a scalar value of 0.::
+
+  hi5.replace_dataset('test.h5', 0., name='x')
+  hi5.info('test.h5', name='x')
+
+Now we will replace it with its original values::
+
+  hi5.replace_dataset('test.h5', x, name='x')
+  hi5.info('test.h5', name='x')
+
+
 Saving data with descriptions
 -----------------------------
 
@@ -171,8 +187,8 @@ We can use :meth:`hi5.save_attributes` or :meth:`hi5.append_attributes` to add a
   hi5.info('test.h5', 'x')
 
 
-Renaming objects
-----------------
+Renaming or deleting objects
+----------------------------
 
 We can easily rename a dataset or group using :meth:`hi5.rename`::
 
@@ -183,6 +199,12 @@ We can easily rename a dataset or group using :meth:`hi5.rename`::
   hi5.rename('test.h5', 'x', 'x_new')
   hi5.info('test.h5')
   hi5.info('test.h5', 'x_new')
+
+Similarly, we can delete a dataset or group using :meth:`hi5.delete`::
+
+  print('\nDELETED DATA')
+  hi5.delete('test.h5', 'x_new')
+  hi5.info('test.h5')
 
 
 Working with NPZ files
