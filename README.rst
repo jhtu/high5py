@@ -3,12 +3,23 @@ Welcome
 
 ``high5py`` is a high-level interface to ``h5py``, which is itself a high-level interface to the HDF5 library.
 You can use ``high5py`` to make one-line calls for the most common HDF5 tasks, like saving and loading data.
+For example::
+
+  import numpy as np
+  import high5py as hi5
+
+  hi5.save_dataset('data.h5', np.random.rand(100), name='x')
+  x = hi5.load_dataset('data.h5', name='x')
 
 
 Installation
 ============
 
-To run ``high5py``, first download the source code from Github::
+The easiest way to install ``high5py`` is using pip::
+
+  pip install high5py
+
+To install from source, download the source code from Github::
 
   git clone git://github.com:jhtu/high5py.git
 
@@ -20,6 +31,10 @@ Next, navigate to the directory containing the source code, then build and insta
 To be sure the code is working, run the unit tests::
 
   python -c 'import high5py as hi5; hi5.run_all_tests()'
+
+
+Documentation
+=============
 
 The documentation is available at https://high5py.readthedocs.io.
 
