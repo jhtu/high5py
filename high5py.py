@@ -163,6 +163,20 @@ def save_dataset(
             fid[name].attrs['Description'] = description
 
 
+def delete(file_path, name):
+    """Delete group/dataset in HDF5 file.
+
+    Parameters
+    ----------
+    file_path: str
+        Path to HDF5 file.
+    name: str
+        HDF5 name (e.g., /group/old_dataset).
+    """
+    with _h5py.File(file_path, 'a') as fid:
+        del fid[name]
+
+
 def rename(file_path, old_name, new_name, new_description=None):
     """Rename group/dataset in HDF5 file.
 

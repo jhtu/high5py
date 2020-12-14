@@ -161,6 +161,18 @@ class TestHigh5Py(_unittest.TestCase):
                     self.assertTrue('old_data' in fid['/'])
 
 
+    # Check that groups and datasets can be deleted correctly
+    def test_delete(self):
+        for grp in self.dtype_names:
+            for dset in self.array_types:
+                _hi5.delete(self.file_path, '{}/{}'.format(grp, dset))
+                with _h5py.File(self.file_path, 'r') as fid:
+                    self.assertFalse(dset in list(fid[grp]))
+            _hi5.delete(self.file_path, grp)
+            with _h5py.File(self.file_path, 'r') as fid:
+                self.assertFalse(grp in list(fid))
+
+
     # Check that groups and datasets can be renamed correctly
     def test_rename(self):
         for grp in self.dtype_names:
