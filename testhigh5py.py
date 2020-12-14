@@ -16,7 +16,7 @@ def run_all_tests():
 class TestHigh5Py(_unittest.TestCase):
     def setUp(self):
         self.outdir = _os.path.join(_os.path.dirname(__file__), 'tmp/')
-        self.file_path = self.outdir + 'test_file.py'
+        self.filepath = self.outdir + 'test_file.py'
         if not _os.path.isdir(self.outdir):
             _os.mkdir(self.outdir)
         self.generate_data()
@@ -59,7 +59,7 @@ class TestHigh5Py(_unittest.TestCase):
             1j * _np.random.rand(self.num_rows, self.num_cols))
 
         # Save to HDF5 file
-        with _h5py.File(self.file_path, 'w') as fid:
+        with _h5py.File(self.filepath, 'w') as fid:
             for dset_name, var_name in zip(self.dset_names, self.var_names):
                 fid[dset_name] = getattr(self, var_name)
 
@@ -74,14 +74,13 @@ class TestHigh5Py(_unittest.TestCase):
 
 
     # Check that a dataset inside an HDF5 file is correct
-    def _helper_check_dataset(
-        self, file_path, dset_name, true_data, desc):
+    def _helper_check_dataset(self, filepath, dset_name, true_data, desc):
 
         # Split dataset name into group and dataset parts
         grp, dset = dset_name.split('/')
 
         # Open file
-        with _h5py.File(file_path, 'r') as fid:
+        with _h5py.File(filepath, 'r') as fid:
 
             # Check that group exists
             self.assertTrue(grp in list(fid))
@@ -100,18 +99,18 @@ class TestHigh5Py(_unittest.TestCase):
 
     # Check that existence of groups/datasets can be queried correctly
     def test_exists(self):
-        with _h5py.File(self.file_path, 'w') as fid:
+        with _h5py.File(self.filepath, 'w') as fid:
             fid['existing/dataset'] = 'data_string'
-        self.assertTrue(_hi5.exists(self.file_path, 'existing'))
-        self.assertTrue(_hi5.exists(self.file_path, 'existing/dataset'))
-        self.assertFalse(_hi5.exists(self.file_path, 'existing/other'))
-        self.assertFalse(_hi5.exists(self.file_path, 'nonexistent/dataset'))
+        self.assertTrue(_hi5.exists(self.filepath, 'existing'))
+        self.assertTrue(_hi5.exists(self.filepath, 'existing/dataset'))
+        self.assertFalse(_hi5.exists(self.filepath, 'existing/other'))
+        self.assertFalse(_hi5.exists(self.filepath, 'nonexistent/dataset'))
 
 
     # Check that datasets can be loaded correctly
     def test_load_dataset(self):
         for dset_name, var_name in zip(self.dset_names, self.var_names):
-            loaded_data = _hi5.load_dataset(self.file_path, dset_name)
+            loaded_data = _hi5.load_dataset(self.filepath, dset_name)
             true_data = getattr(self, var_name)
             self._helper_assert_equal(loaded_data, true_data)
 
@@ -121,20 +120,19 @@ class TestHigh5Py(_unittest.TestCase):
         for dset_name, var_name in zip(self.dset_names, self.var_names):
             for comp_lvl in [None, 4, 9]:
                 true_data = getattr(self, var_name)
-                file_path = self.outdir + var_name + '_saved.h5'
+                filepath = self.outdir + var_name + '_saved.h5'
                 desc = dset_name + ' description'
-                with _h5py.File(file_path, 'w') as fid:
+                with _h5py.File(filepath, 'w') as fid:
                     fid['old_data'] = 'old_data'
                 if 'scalar' in dset_name:
                     _hi5.save_dataset(
-                        file_path, true_data, name=dset_name, description=desc)
+                        filepath, true_data, name=dset_name, description=desc)
                 else:
                     _hi5.save_dataset(
-                        file_path, true_data, name=dset_name, description=desc,
+                        filepath, true_data, name=dset_name, description=desc,
                         compression_level=comp_lvl)
-                self._helper_check_dataset(
-                    file_path, dset_name, true_data, desc)
-                with _h5py.File(file_path, 'r') as fid:
+                self._helper_check_dataset(filepath, dset_name, true_data, desc)
+                with _h5py.File(filepath, 'r') as fid:
                     self.assertFalse('old_data' in fid['/'])
 
 
@@ -144,20 +142,19 @@ class TestHigh5Py(_unittest.TestCase):
         for dset_name, var_name in zip(self.dset_names, self.var_names):
             for comp_lvl in [None, 4, 9]:
                 true_data = getattr(self, var_name)
-                file_path = self.outdir + var_name + '_saved.h5'
+                filepath = self.outdir + var_name + '_saved.h5'
                 desc = var_name + ' description'
-                with _h5py.File(file_path, 'w') as fid:
+                with _h5py.File(filepath, 'w') as fid:
                     fid['old_data'] = 'old_data'
                 if 'scalar' in dset_name:
                     _hi5.append_dataset(
-                        file_path, true_data, name=dset_name, description=desc)
+                        filepath, true_data, name=dset_name, description=desc)
                 else:
                     _hi5.append_dataset(
-                        file_path, true_data, name=dset_name, description=desc,
+                        filepath, true_data, name=dset_name, description=desc,
                         compression_level=comp_lvl)
-                self._helper_check_dataset(
-                    file_path, dset_name, true_data, desc)
-                with _h5py.File(file_path, 'r') as fid:
+                self._helper_check_dataset(filepath, dset_name, true_data, desc)
+                with _h5py.File(filepath, 'r') as fid:
                     self.assertTrue('old_data' in fid['/'])
 
 
@@ -168,26 +165,26 @@ class TestHigh5Py(_unittest.TestCase):
             for comp_lvl in [None, 4, 9]:
                 true_data = getattr(self, var_name)
                 replacement_data = 2 * true_data
-                file_path = self.outdir + var_name + '_saved.h5'
+                filepath = self.outdir + var_name + '_saved.h5'
                 desc = dset_name + ' description'
-                with _h5py.File(file_path, 'w') as fid:
+                with _h5py.File(filepath, 'w') as fid:
                     fid['old_data'] = 'old_data'
                 if 'scalar' in dset_name:
                     _hi5.append_dataset(
-                        file_path, true_data, name=dset_name, description=desc)
+                        filepath, true_data, name=dset_name, description=desc)
                     _hi5.replace_dataset(
-                        file_path, replacement_data, name=dset_name,
+                        filepath, replacement_data, name=dset_name,
                         description=desc)
                 else:
                     _hi5.append_dataset(
-                        file_path, true_data, name=dset_name, description=desc,
+                        filepath, true_data, name=dset_name, description=desc,
                         compression_level=comp_lvl)
                     _hi5.replace_dataset(
-                        file_path, replacement_data, name=dset_name,
+                        filepath, replacement_data, name=dset_name,
                         description=desc, compression_level=comp_lvl)
                 self._helper_check_dataset(
-                    file_path, dset_name, replacement_data, desc)
-                with _h5py.File(file_path, 'r') as fid:
+                    filepath, dset_name, replacement_data, desc)
+                with _h5py.File(filepath, 'r') as fid:
                     self.assertTrue('old_data' in fid['/'])
 
 
@@ -195,30 +192,30 @@ class TestHigh5Py(_unittest.TestCase):
     def test_delete(self):
         for grp in self.dtype_names:
             for dset in self.array_types:
-                _hi5.delete(self.file_path, '{}/{}'.format(grp, dset))
-                with _h5py.File(self.file_path, 'r') as fid:
+                _hi5.delete(self.filepath, '{}/{}'.format(grp, dset))
+                with _h5py.File(self.filepath, 'r') as fid:
                     self.assertFalse(dset in list(fid[grp]))
-            _hi5.delete(self.file_path, grp)
-            with _h5py.File(self.file_path, 'r') as fid:
+            _hi5.delete(self.filepath, grp)
+            with _h5py.File(self.filepath, 'r') as fid:
                 self.assertFalse(grp in list(fid))
 
 
     # Check that groups and datasets can be renamed correctly
     def test_rename(self):
         for grp in self.dtype_names:
-            _hi5.rename(self.file_path, grp, grp + '_mod')
+            _hi5.rename(self.filepath, grp, grp + '_mod')
             new_grp = '{}_mod'.format(grp)
-            with _h5py.File(self.file_path, 'r') as fid:
+            with _h5py.File(self.filepath, 'r') as fid:
                 self.assertFalse(grp in list(fid))
                 self.assertTrue(new_grp in list(fid))
 
             for dset in self.array_types:
                 new_dset = '{}_mod'.format(dset)
                 _hi5.rename(
-                    self.file_path,
+                    self.filepath,
                     '{}/{}'.format(new_grp, dset),
                     '{}/{}'.format(new_grp, new_dset))
-                with _h5py.File(self.file_path, 'r') as fid:
+                with _h5py.File(self.filepath, 'r') as fid:
                     self.assertTrue(new_dset in list(fid[new_grp]))
 
 
@@ -226,11 +223,11 @@ class TestHigh5Py(_unittest.TestCase):
     def test_save_attributes(self):
         name = 'data'
         attributes = {'attr1': 1, 'attr2': 'two'}
-        with _h5py.File(self.file_path, 'w') as fid:
+        with _h5py.File(self.filepath, 'w') as fid:
             fid[name] = 'data'
             fid[name].attrs['old_attr'] = 'old'
-        _hi5.save_attributes(self.file_path, attributes, name=name)
-        with _h5py.File(self.file_path, 'r') as fid:
+        _hi5.save_attributes(self.filepath, attributes, name=name)
+        with _h5py.File(self.filepath, 'r') as fid:
             for key, val in attributes.items():
                 self.assertEqual(fid[name].attrs[key], val)
             self.assertFalse('old_attr' in fid[name].attrs)
@@ -240,11 +237,11 @@ class TestHigh5Py(_unittest.TestCase):
     def test_append_attributes(self):
         name = 'data'
         attributes = {'attr1': 1, 'attr2': 'two'}
-        with _h5py.File(self.file_path, 'w') as fid:
+        with _h5py.File(self.filepath, 'w') as fid:
             fid[name] = 'data'
             fid[name].attrs['old_attr'] = 'old'
-            _hi5.append_attributes(self.file_path, attributes, name=name)
-        with _h5py.File(self.file_path, 'r') as fid:
+            _hi5.append_attributes(self.filepath, attributes, name=name)
+        with _h5py.File(self.filepath, 'r') as fid:
             for key, val in attributes.items():
                 self.assertEqual(fid[name].attrs[key], val)
             self.assertTrue('old_attr' in fid[name].attrs)
