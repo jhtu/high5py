@@ -4,5 +4,5 @@ __pycache__
 docs/_*
 dist
 build
-h5io.egg*
+*.egg-info
 .ipynb_checkpoints

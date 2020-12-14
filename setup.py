@@ -7,7 +7,7 @@ from pkg_resources import parse_version
 here = os.path.abspath(os.path.dirname(__file__))
 
 # Get the version from the relevant file
-with open(os.path.join(here, '_version.py')) as f:
+with open(os.path.join(os.path.join(here, 'high5py'), '_version.py')) as f:
     exec(f.read())
 
 # Get the development status from the version string
@@ -42,6 +42,6 @@ setup(
         'Programming Language :: Python :: 3'
     ],
     packages=['high5py'],
-    package_dir={'high5py': here},
+    package_dir={'high5py': 'high5py'},
     install_requires=['h5py', 'numpy']
 )
