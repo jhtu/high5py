@@ -2,6 +2,8 @@
 
 .. include:: install.rst
 
+.. include:: docs.rst
+
 .. include:: tutorial.rst
 
 .. include:: api.rst
