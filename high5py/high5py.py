@@ -101,7 +101,7 @@ def exists(filepath, name):
     return name in avail_names
 
 
-def load_dataset(filepath, name='data', start_index=0, end_index=-1):
+def load_dataset(filepath, name='data', start_index=None, end_index=None):
     """Load dataset from HDF5 file.
 
     Parameters
@@ -110,6 +110,16 @@ def load_dataset(filepath, name='data', start_index=0, end_index=-1):
         Path to HDF5 file.
     name: str, optional
         HDF5 dataset name (e.g., /group/dataset).  Defaults to 'data'.
+    start_index: int, optional
+        Start index for slicing HDF5 dataset.  Providing a slice index here may
+        be more efficient than returning the entire dataset and then slicing.
+        Defaults to None, for which no slicing will be done on the beginning of
+        the dataset.
+    end_index: int, optional
+        End index for slicing HDF5 dataset.  Providing a slice index here may be
+        more efficient than returning the entire dataset and then slicing.
+        Defaults to None, for which no slicing will be done on the end of the
+        dataset.
 
     Returns
     -------
@@ -119,7 +129,14 @@ def load_dataset(filepath, name='data', start_index=0, end_index=-1):
         returned as scalars.
     """
     with _h5py.File(filepath, 'r') as fid:
-        data = fid[name][()]
+        if start_index is None and end_index is None:
+            data = fid[name][()]
+        elif start_index is None and end_index is not None:
+            data = fid[name][:end_index]
+        elif start_index is not None and end_index is None:
+            data = fid[name][start_index:]
+        else:
+            data = fid[name][start_index:end_index]
     return data
 
 
