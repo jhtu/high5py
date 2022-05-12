@@ -241,8 +241,7 @@ class TestHigh5Py(_unittest.TestCase):
             fid[name].attrs['old_attr'] = 'old'
         _hi5.save_attributes(self.filepath, attributes, name=name)
         with _h5py.File(self.filepath, 'r') as fid:
-            for key, val in attributes.items():
-                self.assertEqual(fid[name].attrs[key], val)
+            self.assertTrue(dict(fid[name].attrs), attributes)
             self.assertFalse('old_attr' in fid[name].attrs)
 
 
@@ -255,8 +254,7 @@ class TestHigh5Py(_unittest.TestCase):
             fid[name].attrs['old_attr'] = 'old'
             _hi5.append_attributes(self.filepath, attributes, name=name)
         with _h5py.File(self.filepath, 'r') as fid:
-            for key, val in attributes.items():
-                self.assertEqual(fid[name].attrs[key], val)
+            self.assertTrue(dict(fid[name].attrs), attributes)
             self.assertTrue('old_attr' in fid[name].attrs)
 
 
