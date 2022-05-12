@@ -219,6 +219,19 @@ class TestHigh5Py(_unittest.TestCase):
                     self.assertTrue(new_dset in list(fid[new_grp]))
 
 
+    # Check that attributes can be loaded correctly
+    def test_load_attributes(self):
+        name = 'data'
+        attributes = {'attr1': 1, 'attr2': 'two'}
+        with _h5py.File(self.filepath, 'w') as fid:
+            fid[name] = 'data'
+            for key, val in attributes.items():
+                fid[name].attrs[key] = val
+        self.assertEqual(
+            _hi5.load_attributes(self.filepath, name=name),
+            attributes)
+
+
     # Check that attributes can be saved correctly
     def test_save_attributes(self):
         name = 'data'

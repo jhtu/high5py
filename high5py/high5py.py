@@ -254,6 +254,25 @@ def replace_dataset(
         compression_level=compression_level)
 
 
+def load_attributes(filepath, name='data'):
+    """Load HDF5 group/dataset attributes from HDF5 file.
+
+    Parameters
+    ----------
+    filepath: str
+        Path to HDF5 file.
+    name: str, optional
+        HDF5 dataset name (e.g., /group/dataset).  Defaults to 'data'.
+
+    Returns
+    -------
+    attributes: dict
+        Dictionary of loaded attributes.
+    """
+    with _h5py.File(filepath, 'r') as fid:
+        return dict(fid[name].attrs)
+
+
 def save_attributes(filepath, attributes, name='data', overwrite=True):
     """Save HDF5 group/dataset attributes (overwrites existing attributes by
     default).
