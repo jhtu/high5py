@@ -11,6 +11,6 @@ same filename (which corresponds to the version number).
 
 References:
 https://en.wikipedia.org/wiki/Software_versioning
-https://legacy.python.org/dev/peps/pep-0440/#version-scheme
+https://peps.python.org/pep-0440/#version-scheme
 """
-__version__ = '0.1.post3'
+__version__ = '0.2'
