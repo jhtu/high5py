@@ -28,16 +28,16 @@ author = 'Jonathan H. Tu'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.imgmath',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages',
-    'sphinx.ext.napoleon',
+    'sphinx.ext.autodoc',       # Include documentation from docstrings
+    'sphinx.ext.imgmath',       # Render math as images in HTML
+    'sphinx.ext.viewcode',      # Add links to highlighted source code
+    'sphinx.ext.napoleon',      # Enable numpy and Google style docstrings
+    'myst_parser'               # Enable Markdown syntax
 ]
 napoleon_use_rtype = False
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+#templates_path = ['_templates']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -54,6 +54,7 @@ master_doc = 'index'
 # The short X.Y version.
 from _version import __version__
 version = __version__
+
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -68,4 +69,4 @@ html_theme = 'default'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
