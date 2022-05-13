@@ -12,6 +12,10 @@
 #
 import os
 import sys
+
+import sphinx_rtd_theme
+
+
 sys.path.insert(0, os.path.abspath('..'))
 
 
@@ -32,6 +36,7 @@ extensions = [
     'sphinx.ext.imgmath',       # Render math as images in HTML
     'sphinx.ext.viewcode',      # Add links to highlighted source code
     'sphinx.ext.napoleon',      # Enable numpy and Google style docstrings
+    'sphinx_rtd_theme',         # Enable Sphinx ReadTheDocs theme
     'myst_parser'               # Enable Markdown syntax
 ]
 napoleon_use_rtype = False
@@ -52,7 +57,7 @@ master_doc = 'index'
 # built documents.
 #
 # The short X.Y version.
-from _version import __version__
+from high5py import __version__
 version = __version__
 
 # The full version, including alpha/beta/rc tags.
@@ -64,7 +69,7 @@ release = version
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'default'
+html_theme = 'sphinx_rtd_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
