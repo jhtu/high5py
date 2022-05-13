@@ -46,17 +46,15 @@ python -c 'import high5py as hi5; hi5.run_all_tests()'
 
 # Documentation
 
-The documentation is available at https://high5py.readthedocs.io.
-
-You can also build the documentation manually with Sphinx
-(http://sphinx.pocoo.org).
-From the `high5py` directory, run `sphinx-build docs docs/_build` and then open
-`docs/_build/index.html` in a web browser.
-
-
-# Tutorial
-
-A tutorial is provided as a Juptyer notebook (`tutorial.ipynb`), as well as in the online documentation at https://high5py.readthedocs.io.
+A tutorial notebook is available in the source code at `examples/tutorial.ipynb`.
+The full documentation is available at [ReadTheDocs](https://high5py.readthedocs.io).
+You can also build it manually with [Sphinx](http://sphinx.pocoo.org).
+To do so, navigate to the `high5py` root directory (the one containing `setup.py`).
+Then run
+```
+sphinx-build docs docs/_build
+```
+You can then open `docs/_build/index.html` in a web browser.
 
 
 # Dependencies
