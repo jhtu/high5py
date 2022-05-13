@@ -1,9 +1,5 @@
 *~
 *.pyc
 __pycache__
-high5py/docs/_*
-dist
-build
-*.egg-info
 .ipynb_checkpoints
 docs/_build
