@@ -9,4 +9,5 @@ version: 2
 # NOTE:  As of 13 MAY 2022, require Python >= 3.8 in order for h5py and numpy dependencies to work.  ReadTheDocs uses Python 3.7 by default, and for some reason pip is not correctly installing compatible dependency versions.
 build:
   tools:
+    os: ubuntu-20.04
     python: "3.8"
