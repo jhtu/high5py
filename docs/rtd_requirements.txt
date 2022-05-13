@@ -1,0 +1,4 @@
+# Install requirements for building docs on ReadTheDocs
+h5py
+myst-parser
+numpy

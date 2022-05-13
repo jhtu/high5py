@@ -10,11 +10,6 @@ version_dir = os.path.join(curr_dir, pkg_name)
 sys.path.append(version_dir)
 from _version import __version__
 
-# Read requirements
-with open('requirements.txt', 'r') as fid:
-    pkg_dependencies = [
-        s.strip() for s in fid.readlines() if not s.startswith('#')]
-
 # Setup
 setup(
     name='high5py',
@@ -30,5 +25,5 @@ setup(
         'Programming Language :: Python :: 3'
     ],
     packages=[pkg_name],
-    install_requires=pkg_dependencies
+    install_requires=['h5py', 'numpy']
 )
