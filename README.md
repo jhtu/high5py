@@ -46,7 +46,7 @@ python -c 'import high5py as hi5; hi5.run_all_tests()'
 
 # Documentation
 
-A tutorial notebook is available in the source code at `examples/tutorial.ipynb`.
+A tutorial notebook is available in the source code at [`examples/tutorial.ipynb`](https://github.com/jhtu/high5py/blob/master/examples/tutorial.ipynb).
 The full documentation is available at [ReadTheDocs](https://high5py.readthedocs.io).
 You can also build it manually with [Sphinx](http://sphinx.pocoo.org).
 To do so, navigate to the `high5py` root directory (the one containing `setup.py`).
