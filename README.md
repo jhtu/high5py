@@ -61,7 +61,7 @@ You can then open `docs/_build/index.html` in a web browser.
 
 `high5py` is published under the BSD 3-clause license:
 
-Copyright (c) 2012--2020, Jonathan Tu
+Copyright (c) 2012--2022, Jonathan H. Tu
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
