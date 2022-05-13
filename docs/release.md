@@ -12,6 +12,8 @@ A few new features, a small bug fix, and some internal changes.
 
 - The `start_index` and `end_index` arguments to `load_dataset` are now functional.  Previously, argument values could be passed in but would not affect the function behavior.
 
+- Fixed a minor bug in the tutorial by updating the expected exception when trying to append a dataset whose name already exists.
+
 **Internal changes**
 
 - The repository files have been reorganized.
