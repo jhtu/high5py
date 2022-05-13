@@ -1,0 +1,2 @@
+# Extra install requirements for building docs
+myst-parser
