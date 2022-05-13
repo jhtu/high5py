@@ -1,0 +1,3 @@
+# Minimal install requirements
+h5py
+numpy
