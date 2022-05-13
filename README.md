@@ -57,11 +57,6 @@ sphinx-build docs docs/_build
 You can then open `docs/_build/index.html` in a web browser.
 
 
-# Dependencies
-
-`high5py` requires `numpy` and `h5py`.
-
-
 # Licensing
 
 `high5py` is published under the BSD 3-clause license:
